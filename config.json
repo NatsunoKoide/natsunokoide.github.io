@@ -1,10 +1,21 @@
 {
-    "title":"Meekdai",
-    "displayTitle":"eekdai",
-    "subTitle":"童话是一种生活态度，仅此而已。",
-    "homeUrl":"http://blog.meekdai.com",
+    "title":"NatsunoKoide",
+    "displayTitle":"ADd7",
+    "subTitle":"游戏是一种生活态度，生活亦是游戏而已。",
+    "homeUrl":"https://natsunokoide.github.io/",
     "avatarUrl":"http://meekdai.com/avatar.jpg",
     "faviconUrl":"http://meekdai.com/favicon.ico",
     "singlePage":[],
     "GMEEK_VERSION":"last"
+
+    "email":"yujiaqifinn@163.com",
+    "startSite":"02/16/2015",
+    "filingNum":"浙ICP备20023628号",
+    "onePageListNum":15,
+    "commentLabelColor":"#006b75",
+    "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
+    "i18n":"CN",
+    "dayTheme":"light",
+    "nightTheme":"dark_colorblind",
+    "urlMode":"pinyin",
 }
