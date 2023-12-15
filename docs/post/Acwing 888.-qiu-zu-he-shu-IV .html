@@ -68,8 +68,86 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<p>测试博客</p>
-<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">"test"</span><span class="pl-kos">)</span></pre></div>
+<h3>求组合数的基础公式：</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/d3b140ef-012e-46ab-9edd-974cc4d97757"><img src="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/d3b140ef-012e-46ab-9edd-974cc4d97757" alt="image" style="max-width: 100%;"></a></p>
+<h3>其中阶乘可以转化为：</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/ec00e7e3-2f42-46a3-bbf5-15df59e956fa"><img src="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/ec00e7e3-2f42-46a3-bbf5-15df59e956fa" alt="image" style="max-width: 100%;"></a></p>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">algorithm</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">vector</span><span class="pl-c1">&gt;</span>
+
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">int</span> <span class="pl-v">N</span> <span class="pl-c1">=</span> <span class="pl-c1">5010</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">,</span><span class="pl-s1">cnt</span><span class="pl-kos">;</span>
+<span class="pl-s1">int</span> <span class="pl-s1">sum</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+<span class="pl-s1">bool</span> <span class="pl-s1">st</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+
+<span class="pl-k">void</span> <span class="pl-en">get_primes</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">)</span>   <span class="pl-c">//线性筛法求质数 cnt是个数 primes数组里装着质数</span>
+<span class="pl-kos">{</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">st</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">cnt</span><span class="pl-c1">++</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">j</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">st</span><span class="pl-kos">[</span><span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">i</span> <span class="pl-c1">%</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-k">break</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">get</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">,</span><span class="pl-s1">int</span> <span class="pl-s1">p</span><span class="pl-kos">)</span> <span class="pl-c">//// 求n！中包含p的次数</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-s1">n</span><span class="pl-c1">/</span><span class="pl-s1">p</span><span class="pl-kos">;</span>
+        <span class="pl-s1">n</span> <span class="pl-c1">/=</span> <span class="pl-s1">p</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-en">mul</span><span class="pl-kos">(</span><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-c1">&amp;</span> <span class="pl-v">A</span><span class="pl-kos">,</span> <span class="pl-s1">int</span> <span class="pl-s1">b</span><span class="pl-kos">)</span>   <span class="pl-c">//高精度乘法 用vector接收 和 输入 c++才要</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-v">C</span><span class="pl-kos">;</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">t</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">t</span> <span class="pl-c1">||</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-v">A</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-v">A</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-s1">t</span> <span class="pl-c1">+=</span> <span class="pl-v">A</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">*</span> <span class="pl-s1">b</span><span class="pl-kos">;</span>
+        <span class="pl-v">C</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">t</span> <span class="pl-c1">%</span> <span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">t</span> <span class="pl-c1">/=</span> <span class="pl-c1">10</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-v">C</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">1</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-v">C</span><span class="pl-kos">.</span><span class="pl-en">back</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-v">C</span><span class="pl-kos">.</span><span class="pl-en">pop_back</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-v">C</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">a</span><span class="pl-kos">,</span><span class="pl-s1">b</span><span class="pl-kos">;</span>
+    <span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">a</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">b</span><span class="pl-kos">;</span>
+    <span class="pl-en">get_primes</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-c">//循环得到每一个质数的次数（这个次数不能重复）</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">cnt</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span> <span class="pl-c">//cnt在get_primes函数里</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-s1">sum</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">,</span><span class="pl-s1">p</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-c1">-</span><span class="pl-s1">b</span><span class="pl-kos">,</span><span class="pl-s1">p</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s1">b</span><span class="pl-kos">,</span><span class="pl-s1">p</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    
+    <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">cnt</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span> <span class="pl-c">//循环质数的个数</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">sum</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span><span class="pl-s1">j</span><span class="pl-c1">++</span><span class="pl-kos">)</span><span class="pl-c">//循环质数的次数</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-en">mul</span><span class="pl-kos">(</span><span class="pl-s1">res</span><span class="pl-kos">,</span><span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span> <span class="pl-c">//算出每一个质数的j次方</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-c">//因为高精度乘法最后的输出是每一个数字以vector的方式呈现的 所以需要遍历整个数组才能得到最后的数字</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&gt;=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">--</span><span class="pl-kos">)</span> <span class="pl-en">printf</span><span class="pl-kos">(</span><span class="pl-s">"%d"</span><span class="pl-kos">,</span><span class="pl-s1">res</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span> </pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
