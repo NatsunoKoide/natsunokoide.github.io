@@ -71,19 +71,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody">
 <h3>卡特兰数</h3>
-<pre class="notranslate"><code class="notranslate">卡特兰数是组合数学中一个常出现于各种计数问题中的数列。
-</code></pre>
+<blockquote>
+<p>卡特兰数是组合数学中一个常出现于各种计数问题中的数列。</p>
+</blockquote>
 <h3>卡特兰数的几何意义</h3>
-<pre class="notranslate"><code class="notranslate">卡特兰数就是一个有规律的数列，在坐标图中可以表示为：从原点(0,0)出发，每次向x轴或者y轴正方向移动1个单位，直到到达(n,n)点，且在移动过程中不越过第一象限平分线的移动方案总数。
-</code></pre>
+<p>卡特兰数就是一个有规律的数列，在坐标图中可以表示为：从原点(0,0)出发，每次向x轴或者y轴正方向移动1个单位，直到到达(n,n)点，且在移动过程中不越过第一象限平分线的移动方案总数。</p>
 <h3>卡特兰数的推导以及图解</h3>
 <p>图解：<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/1cbe6346-e96c-4a49-a8c2-f6e17cd5cd39"><img src="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/1cbe6346-e96c-4a49-a8c2-f6e17cd5cd39" alt="image" style="max-width: 100%;"></a><br>
 推导过程：<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/1a8c5bd2-ca52-4c6e-ae89-9ed78bf564f4"><img src="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/1a8c5bd2-ca52-4c6e-ae89-9ed78bf564f4" alt="image" style="max-width: 100%;"></a></p>
 <h3>卡特兰数的应用 （Acwing 899.满足条件的01序列）</h3>
-<pre class="notranslate"><code class="notranslate">该题主要解决给定 n个 0和 n个 1，它们将按照某种顺序排成长度为 2n的序列，求它们能排列成的所有序列中，能够满足任意前缀序列中 0 的个数都不少于 1的个数的序列有多少个。 （其本质最优解就是卡特兰数）
-</code></pre>
+<p>该题主要解决给定 n个 0和 n个 1，它们将按照某种顺序排成长度为 2n的序列，求它们能排列成的所有序列中，能够满足任意前缀序列中 0 的个数都不少于 1的个数的序列有多少个。 （其本质最优解就是卡特兰数）</p>
 <div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
 #<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">algorithm</span><span class="pl-c1">&gt;</span>
 <span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
