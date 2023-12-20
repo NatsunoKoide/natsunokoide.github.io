@@ -1,6 +1,29 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Wed, 20 Dec 2023 02:03:08 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Wed, 20 Dec 2023 02:03:08 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>Acwing 892.台阶-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20892.-tai-jie--Nim-you-xi.html</link><description>### 结论&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Wed, 20 Dec 2023 03:00:54 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Wed, 20 Dec 2023 03:00:54 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>Acwing 893.集合-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20893.-ji-he--Nim-you-xi.html</link><description>### 集合-Nim游戏&#13;
+**集合类型的Nim游戏问题在Nim之前需要对每一个集合进行SG函数计算并分析SG的结果**&#13;
+&#13;
+&gt; 知识点 1 mex( )函数&#13;
+_mex（）：设集合S是一个非负整数集合，定义mex（S）为求出不属于S的最小非负整数的运算&#13;
+  mes（S）= min[x],其中x属于自然数，且x不属于_&#13;
+**可以理解为mex就是得出S中不存在的最小的数**&#13;
+&#13;
+&gt; 知识点 2 SG( )函数&#13;
+_SG( ):：在有向图中，对于每个节点x,设x触发共有k条边，分别到达节点y1，y2……yk&#13;
+  SG(x)为x的后继节点的SG值构成的集合执行mex（）运算后的值&#13;
+  即SG（x） = mex（SG(y1),SG(y2),SG(y3)……SG（yk））&#13;
+性质1：SG(i)  = k，则i最大能到达的SG值为k-1&#13;
+性质2：非0可以走向0&#13;
+性质3：0只能走向非0_&#13;
+&#13;
+### 本题最重要的定理&#13;
+**对于n个图（集合）如果SG（G1）^SG(G2)^……SG(Gn) != 0 则先手必胜，反之先手必败**&#13;
+&#13;
+_对于理论部分，引用Acwing用户E.lena的手写图解_&#13;
+[https://www.acwing.com/solution/content/23435/](url)&#13;
+&#13;
+### 题目内容&#13;
+**给定 n堆石子以及一个由 k个不同正整数构成的数字集合 S。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/Acwing%20893.-ji-he--Nim-you-xi.html</guid><pubDate>Wed, 20 Dec 2023 02:58:13 +0000</pubDate></item><item><title>Acwing 892.台阶-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20892.-tai-jie--Nim-you-xi.html</link><description>### 结论&#13;
 **在Acwing 891的基础上，此题将传统Nim游戏问题拓展到台阶，有结论为：如果先手的奇数台阶上的值异或为0，则先手必败，反之亦然。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/Acwing%20892.-tai-jie--Nim-you-xi.html</guid><pubDate>Wed, 20 Dec 2023 02:02:38 +0000</pubDate></item><item><title>Unity.四元数</title><link>https://natsunokoide.github.io//post/Unity.-si-yuan-shu.html</link><description>### 轴-角对&#13;
 ![image](https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/fb7ce126-6726-4819-bebf-a2dfa19a1f75)&#13;
 &#13;
