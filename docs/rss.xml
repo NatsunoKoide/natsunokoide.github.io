@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Wed, 20 Dec 2023 03:00:54 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Wed, 20 Dec 2023 03:00:54 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>Acwing 893.集合-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20893.-ji-he--Nim-you-xi.html</link><description>### 集合-Nim游戏&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Thu, 21 Dec 2023 02:10:24 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Thu, 21 Dec 2023 02:10:24 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>Acwing 894.拆分-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20894.-chai-fen--Nim-you-xi.html</link><description>### Nim游戏的基础理论 在 #4 Nim游戏 中&#13;
+### 拆分-Nim游戏 的 思考方式类似于集合-Nim游戏 需要针对不同的局面进行异或 #7 （SG函数）&#13;
+&#13;
+&gt; 拆分-Nim游戏的核心&#13;
+**本题主要在于 每一次拆分两组的数量虽然可以大于原石头堆 但是每一组不可以大于原堆的石头数&#13;
+   所以每一轮拆分都会至少使得上一轮的最大值-1，从而遍历所有情况总能使得有一方石头堆归零，无法继续操作。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/Acwing%20894.-chai-fen--Nim-you-xi.html</guid><pubDate>Thu, 21 Dec 2023 02:09:57 +0000</pubDate></item><item><title>Acwing 893.集合-Nim游戏</title><link>https://natsunokoide.github.io//post/Acwing%20893.-ji-he--Nim-you-xi.html</link><description>### 集合-Nim游戏&#13;
 **集合类型的Nim游戏问题在Nim之前需要对每一个集合进行SG函数计算并分析SG的结果**&#13;
 &#13;
 &gt; 知识点 1 mex( )函数&#13;
