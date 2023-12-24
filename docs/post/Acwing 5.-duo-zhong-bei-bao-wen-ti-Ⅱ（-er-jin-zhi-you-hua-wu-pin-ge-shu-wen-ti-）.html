@@ -96,7 +96,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
 <span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
 
-<span class="pl-k">const</span> <span class="pl-s1">int</span> <span class="pl-v">N</span> <span class="pl-c1">=</span> <span class="pl-c1">12010</span><span class="pl-kos">,</span><span class="pl-v">M</span> <span class="pl-c1">=</span> <span class="pl-c1">2010</span><span class="pl-kos">;</span>
+<span class="pl-k">const</span> <span class="pl-s1">int</span> <span class="pl-v">N</span> <span class="pl-c1">=</span> <span class="pl-c1">12010</span><span class="pl-kos">,</span><span class="pl-v">M</span> <span class="pl-c1">=</span> <span class="pl-c1">2010</span><span class="pl-kos">;</span>   
+<span class="pl-c">//关于N为什么是12010 通过计算复杂度N*logS*V 2000 *log2000 * 1000</span>
+<span class="pl-c">//二进制优化 把s变为logs</span>
 
 <span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">,</span><span class="pl-s1">m</span><span class="pl-kos">;</span>
 <span class="pl-s1">int</span> <span class="pl-s1">v</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">,</span><span class="pl-s1">w</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">;</span>

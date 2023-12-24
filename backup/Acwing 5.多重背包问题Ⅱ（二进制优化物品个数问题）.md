@@ -26,7 +26,9 @@ _题干与多重背包问题Ⅰ相同，但数据范围不同_
 #include <iostream>
 using namespace std;
 
-const int N = 12010,M = 2010;
+const int N = 12010,M = 2010;   
+//关于N为什么是12010 通过计算复杂度N*logS*V 2000 *log2000 * 1000
+//二进制优化 把s变为logs
 
 int n,m;
 int v[N],w[N];
