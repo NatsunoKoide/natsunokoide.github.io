@@ -104,6 +104,37 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span> <span class="pl-c1">=</span> <span class="pl-v">Quaternion</span><span class="pl-kos">.</span><span class="pl-en">Euler</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
 <h3>单位四元数——代表没有旋转</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/7e3c13a5-2def-426e-a612-2443e74416f6"><img src="https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/7e3c13a5-2def-426e-a612-2443e74416f6" alt="image" style="max-width: 100%;"></a></p>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">region</span> <span class="pl-s1">知识点1</span> <span class="pl-s1">单位四元数</span>
+        <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-v">Quaternion</span><span class="pl-kos">.</span><span class="pl-c1">identity</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//直接让单位四元数赋值会直接让物体转角全部归零</span>
+        <span class="pl-c">//obj.rotation = Quaternion.identity;</span>
+
+        <span class="pl-c">//Instantiate(obj, Vector3.zero, Quaternion.identity);</span>
+ #<span class="pl-s1">endregion</span></pre></div>
+<h3>四元数中的差值运算 + 通过看向的方式让物体一直盯着目标</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate">    <span class="pl-s1">public</span> <span class="pl-v">Quaternion</span> <span class="pl-s1">start</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">float</span> <span class="pl-s1">time</span><span class="pl-kos">;</span>
+
+    <span class="pl-s1">public</span> <span class="pl-v">Transform</span> <span class="pl-s1">lookA</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-v">Transform</span> <span class="pl-s1">lookB</span><span class="pl-kos">;</span>
+<span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">start</span> <span class="pl-c1">=</span> <span class="pl-v">B</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-k">void</span> <span class="pl-v">Update</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+
+        #<span class="pl-s1">region</span> <span class="pl-s1">知识点2</span> <span class="pl-c1">插值运算</span> <span class="pl-kos">(</span><span class="pl-s1">在Quaternion中有lerp和slerp</span> <span class="pl-s1">但是lerp效果在大角度中一般所以就用slerp</span><span class="pl-kos">)</span>
+        <span class="pl-c">//无限接近</span>
+        <span class="pl-v">A</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span> <span class="pl-c1">=</span> <span class="pl-v">Quaternion</span><span class="pl-kos">.</span><span class="pl-en">Slerp</span><span class="pl-kos">(</span><span class="pl-v">A</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span><span class="pl-kos">,</span> <span class="pl-s1">target</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span><span class="pl-kos">,</span> <span class="pl-v">Time</span><span class="pl-kos">.</span><span class="pl-c1">deltaTime</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//匀速  time &gt;= 1 到达目标</span>
+        <span class="pl-s1">time</span> <span class="pl-c1">+=</span> <span class="pl-v">Time</span><span class="pl-kos">.</span><span class="pl-c1">deltaTime</span><span class="pl-kos">;</span>
+        <span class="pl-v">B</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span> <span class="pl-c1">=</span> <span class="pl-v">Quaternion</span><span class="pl-kos">.</span><span class="pl-en">Slerp</span><span class="pl-kos">(</span><span class="pl-s1">start</span><span class="pl-kos">,</span> <span class="pl-s1">target</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span><span class="pl-kos">,</span> <span class="pl-s1">time</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        #<span class="pl-s1">endregion</span>
+        #<span class="pl-s1">region</span> <span class="pl-s1">知识点3</span> <span class="pl-s1">lookrotation</span>
+        <span class="pl-c">//Quaternion q = Quaternion.LookRotation(lookB.position - lookA.position);</span>
+        <span class="pl-s1">lookA</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span> <span class="pl-c1">=</span> <span class="pl-v">Quaternion</span><span class="pl-kos">.</span><span class="pl-en">LookRotation</span><span class="pl-kos">(</span><span class="pl-s1">lookB</span><span class="pl-kos">.</span><span class="pl-c1">position</span> <span class="pl-c1">-</span> <span class="pl-s1">lookA</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        #<span class="pl-s1">endregion</span><span class="pl-kos"></span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

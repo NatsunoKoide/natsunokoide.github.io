@@ -37,3 +37,40 @@
 ```
 ### 单位四元数——代表没有旋转
 ![image](https://github.com/NatsunoKoide/NatsunoKoide.github.io/assets/137853852/7e3c13a5-2def-426e-a612-2443e74416f6)
+
+```js
+#region 知识点1 单位四元数
+        print(Quaternion.identity);
+        //直接让单位四元数赋值会直接让物体转角全部归零
+        //obj.rotation = Quaternion.identity;
+
+        //Instantiate(obj, Vector3.zero, Quaternion.identity);
+ #endregion
+```
+
+### 四元数中的差值运算 + 通过看向的方式让物体一直盯着目标
+```js
+    public Quaternion start;
+    public float time;
+
+    public Transform lookA;
+    public Transform lookB;
+void Start()
+    {
+        start = B.transform.rotation;
+    }
+void Update()
+    {
+
+        #region 知识点2 插值运算 (在Quaternion中有lerp和slerp 但是lerp效果在大角度中一般所以就用slerp)
+        //无限接近
+        A.transform.rotation = Quaternion.Slerp(A.transform.rotation, target.transform.rotation, Time.deltaTime);
+        //匀速  time >= 1 到达目标
+        time += Time.deltaTime;
+        B.transform.rotation = Quaternion.Slerp(start, target.rotation, time);
+        #endregion
+        #region 知识点3 lookrotation
+        //Quaternion q = Quaternion.LookRotation(lookB.position - lookA.position);
+        lookA.rotation = Quaternion.LookRotation(lookB.position - lookA.position);
+        #endregion
+```
