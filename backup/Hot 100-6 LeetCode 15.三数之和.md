@@ -36,6 +36,7 @@ public:
     vector<vector<int>> threeSum(vector<int>& nums) {
         vector<vector<int>> res;
         int n = nums.size();
+        //指针问题不能忘记排序+去重————（易错点1）
         sort(nums.begin(),nums.end());
         for(int first = 0;first < n;first++)
         {
@@ -45,10 +46,12 @@ public:
             for(int second = first + 1;second < n;second++)
             {
                 if(second > first + 1 && nums[second] == nums[second - 1])continue;
+                //移动thid指针是一个循环的过程 不能用if 而是while ——————（易错点2）
                 while(second < third && nums[second] + nums[third] > target) third--;
                 if(second == third) break;
                 else if(nums[second] + nums[third] == target)
                 {
+                 //res是嵌套的vector所以pushback的时候一定要记得加{ }
                     res.push_back({nums[first],nums[second],nums[third]});
                 }
             }
