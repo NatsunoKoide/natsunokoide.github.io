@@ -26,13 +26,15 @@ public:
             return 0;
         }
         
-        vector<int> leftMax(n);
+        //vector<int> leftMax(n);
+        int leftMax[n+1];
         leftMax[0] = height[0];
         for (int i = 1; i < n; ++i) {
             leftMax[i] = max(leftMax[i - 1], height[i]);
         }
 
-        vector<int> rightMax(n);
+        //vector<int> rightMax(n);
+        int rightMax[n+1];
         rightMax[n - 1] = height[n - 1];
         for (int i = n - 2; i >= 0; --i) {
             rightMax[i] = max(rightMax[i + 1], height[i]);
