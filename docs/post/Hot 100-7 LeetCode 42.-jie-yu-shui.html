@@ -15,7 +15,7 @@
     </script>
     
 <title>Hot 100-7 LeetCode 42.接雨水</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -81,6 +81,61 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 示例 2<br>
 输入：height = [4,2,0,3,2,5]<br>
 输出：9</p>
+<h3>方法1—动态规划  时间复杂度O(n)</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/bb3e5868-0830-4481-a87d-54e40d75c0cf"><img src="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/bb3e5868-0830-4481-a87d-54e40d75c0cf" alt="image" style="max-width: 100%;"></a><br>
+<em>这个方法是最开始学习接雨水问题时编写得代码，通过空间覆盖计算得思想，这种接雨水的计算方式需记忆。</em></p>
+<blockquote>
+<p>代码</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">Solution</span> <span class="pl-kos">{</span>
+<span class="pl-c1">public</span>:
+    <span class="pl-c1">int</span> <span class="pl-en">trap</span><span class="pl-kos">(</span><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-c1">&amp;</span> <span class="pl-s1">height</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">n</span> <span class="pl-c1">=</span> <span class="pl-s1">height</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">n</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        
+        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-en">leftMax</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">leftMax</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span> <span class="pl-c1">++</span><span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">leftMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-s1">leftMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-en">rightMax</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">rightMax</span><span class="pl-kos">[</span><span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">2</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&gt;=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-c1">--</span><span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">rightMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-s1">rightMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        <span class="pl-s1">int</span> <span class="pl-s1">ans</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span> <span class="pl-c1">++</span><span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">ans</span> <span class="pl-c1">+=</span> <span class="pl-en">min</span><span class="pl-kos">(</span><span class="pl-s1">leftMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-s1">rightMax</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-s1">ans</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<h3>方法2—双指针优化动态规划</h3>
+<p><em>双指针把方法1的时间复杂度优化到了 O(1),整体思想与方法1类似，靠左右指针向内收进行计算，指针重叠即结束。</em></p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">Solution</span> <span class="pl-kos">{</span>
+<span class="pl-c1">public</span>:
+    <span class="pl-c1">int</span> <span class="pl-en">trap</span><span class="pl-kos">(</span><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-c1">&amp;</span> <span class="pl-s1">height</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">ans</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">left</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">right</span> <span class="pl-c1">=</span> <span class="pl-s1">height</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">leftMax</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">rightMax</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-s1">left</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">right</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">leftMax</span> <span class="pl-c1">=</span> <span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-s1">leftMax</span><span class="pl-kos">,</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">left</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">rightMax</span> <span class="pl-c1">=</span> <span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-s1">rightMax</span><span class="pl-kos">,</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">right</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">left</span><span class="pl-kos">]</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">right</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">ans</span> <span class="pl-c1">+=</span> <span class="pl-s1">leftMax</span> <span class="pl-c1">-</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">left</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+                <span class="pl-c1">++</span><span class="pl-s1">left</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">ans</span> <span class="pl-c1">+=</span> <span class="pl-s1">rightMax</span> <span class="pl-c1">-</span> <span class="pl-s1">height</span><span class="pl-kos">[</span><span class="pl-s1">right</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+                <span class="pl-c1">--</span><span class="pl-s1">right</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-s1">ans</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
