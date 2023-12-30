@@ -27,6 +27,7 @@ jobs:
           cat config.json
           echo "====== check config.josn end  ======"
           sudo apt-get install jq
+          sudo apt-get update && sudo apt-get install -y libxml2-dev libxslt1-dev
 
       - name: Set up Python
         uses: actions/setup-python@v4
