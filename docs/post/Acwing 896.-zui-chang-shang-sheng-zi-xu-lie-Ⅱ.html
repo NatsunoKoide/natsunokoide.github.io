@@ -15,7 +15,7 @@
     </script>
     
 <title>Acwing 896.最长上升子序列Ⅱ</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -84,6 +84,75 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>当前题目为Acwing 896.最长上升子序列Ⅱ 在Ⅰ的基础上对N 的范围进行了扩大，背包的思考方式存在时间复杂度压力，所以采用模拟单调栈的贪心思路求解。</p>
 </blockquote>
 <h3>代码一（采用low_bound和容器）</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">vector</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">algorithm</span><span class="pl-c1">&gt;</span>
+
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-en">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">;</span> <span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+    <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-en">arr</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span> <span class="pl-c1">++</span><span class="pl-s1">i</span><span class="pl-kos">)</span><span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+
+    <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-s1">stk</span><span class="pl-kos">;</span><span class="pl-c">//模拟堆栈</span>
+    <span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    
+    <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span> <span class="pl-c1">++</span><span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">back</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-c">//如果该元素大于栈顶元素,将该元素入栈</span>
+            <span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">else</span><span class="pl-c">//替换掉第一个大于或者等于这个数字的那个数</span>
+            <span class="pl-c1">*</span><span class="pl-en">lower_bound</span><span class="pl-kos">(</span><span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">begin</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">end</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-c1">=</span> <span class="pl-s1">arr</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">stk</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">endl</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>代码二（使用二分查找模拟单调栈的替换位置）</h3>
+<blockquote>
+<p>代码二的时间复杂度是代码一的四分之一</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">algorithm</span><span class="pl-c1">&gt;</span>
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">int</span> <span class="pl-v">N</span> <span class="pl-c1">=</span> <span class="pl-c1">100010</span><span class="pl-kos">;</span>
+<span class="pl-c">//a[]存放数字 f[]模拟单调栈</span>
+<span class="pl-s1">int</span> <span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">,</span><span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+<span class="pl-c">//最长子序列的长度</span>
+<span class="pl-s1">int</span> <span class="pl-s1">cnt</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">find</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">x</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">,</span><span class="pl-s1">r</span> <span class="pl-c1">=</span> <span class="pl-s1">cnt</span><span class="pl-kos">;</span>
+    <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-s1">l</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">r</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">mid</span> <span class="pl-c1">=</span> <span class="pl-s1">l</span> <span class="pl-c1">+</span> <span class="pl-s1">r</span><span class="pl-c1">&gt;&gt;</span> <span class="pl-c1">1</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">mid</span><span class="pl-kos">]</span> <span class="pl-c1">&gt;=</span> <span class="pl-s1">x</span><span class="pl-kos">)</span> <span class="pl-s1">r</span> <span class="pl-c1">=</span> <span class="pl-s1">mid</span><span class="pl-kos">;</span>
+        <span class="pl-k">else</span> <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-s1">mid</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">return</span> <span class="pl-s1">l</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+    <span class="pl-en">scanf</span><span class="pl-kos">(</span><span class="pl-s">"%d"</span><span class="pl-kos">,</span><span class="pl-c1">&amp;</span><span class="pl-s1">n</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span> <span class="pl-en">scanf</span><span class="pl-kos">(</span><span class="pl-s">"%d"</span><span class="pl-kos">,</span><span class="pl-c1">&amp;</span><span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-c1">++</span><span class="pl-s1">cnt</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">cnt</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-c1">++</span><span class="pl-s1">cnt</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-k">else</span> 
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//find函数找的是在0-cnt个数字中比a[i]小或者等于的那个数字的位置</span>
+            <span class="pl-s1">int</span> <span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">tmp</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-en">printf</span><span class="pl-kos">(</span><span class="pl-s">"%d"</span><span class="pl-kos">,</span><span class="pl-s1">cnt</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
