@@ -85,10 +85,60 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">// Unity 在内部 实例化一个rq请求 这个请求会去开一个线程进行资源下载</span>
 <span class="pl-v">ResourceRequest</span> <span class="pl-s1">rq</span> <span class="pl-c1">=</span> <span class="pl-v">Resources</span><span class="pl-kos">.</span><span class="pl-c1">LoadAsync</span><span class="pl-c1">&lt;</span><span class="pl-v">Texture</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">"Tex/TestJPG"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-c">//对资源下载结束这一事件进行监听</span>
-<span class="pl-s1">rq</span><span class="pl-kos">.</span><span class="pl-c1">completed</span> <span class="pl-c1">+=</span> <span class="pl-v">LoadOver</span><span class="pl-kos">;</span></pre></div>
+<span class="pl-s1">rq</span><span class="pl-kos">.</span><span class="pl-c1">completed</span> <span class="pl-c1">+=</span> <span class="pl-v">LoadOver</span><span class="pl-kos">;</span>
+<span class="pl-c">//不能直接在 ResourceRequest rq 下一行直接调用 rq.asset 此时资源还没有加载完</span></pre></div>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">//completed事件需要形参 AsyncOperation 也就是正在监听是否结束的事件</span>
+<span class="pl-s1">private</span> <span class="pl-k">void</span> <span class="pl-v">LoadOver</span><span class="pl-kos">(</span><span class="pl-v">AsyncOperation</span> <span class="pl-s1">rq</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"加载结束"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//asset 是资源对象 加载完毕过后 就能够得到它</span>
+        <span class="pl-c">//需要将AsyncOperation转换为ResourceRequest才能点出asset资源属性才能 再从资源as为目标对象类型</span>
+        <span class="pl-s1">tex</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">rq</span> <span class="pl-s1">as</span> <span class="pl-v">ResourceRequest</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-c1">asset</span> <span class="pl-s1">as</span> <span class="pl-v">Texture</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-s1">private</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">OnGUI</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//判定tex对象不为空后 进行gui绘制</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">tex</span> <span class="pl-c1">!=</span> <span class="pl-c1">null</span><span class="pl-kos">)</span>
+            <span class="pl-c1">GUI</span><span class="pl-kos">.</span><span class="pl-en">DrawTexture</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">Rect</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-c1">100</span><span class="pl-kos">,</span> <span class="pl-c1">100</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">tex</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span></pre></div>
 <ol start="2">
 <li>通过协程实现 异步加载资源</li>
 </ol>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+     <span class="pl-c">//在start函数中 开启协程 运行 协程函数load</span>
+     <span class="pl-v">StartCoroutine</span><span class="pl-kos">(</span><span class="pl-v">Load</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<div class="highlight highlight-source-js"><pre class="notranslate"> <span class="pl-v">IEnumerator</span> <span class="pl-v">Load</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//迭代器函数 当遇到yield return时  就会停止执行之后的代码</span>
+        <span class="pl-c">//协程协调器 通过得到 返回的值 去判断 下一次执行后面的步骤 将会是何时</span>
+        <span class="pl-v">ResourceRequest</span> <span class="pl-s1">rq</span> <span class="pl-c1">=</span> <span class="pl-v">Resources</span><span class="pl-kos">.</span><span class="pl-c1">LoadAsync</span><span class="pl-c1">&lt;</span><span class="pl-v">Texture</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">"Tex/TestJPG"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//第一部分</span>
+        <span class="pl-c">//Unity 自己知道 该返回值 意味着你在异步加载资源 </span>
+
+        <span class="pl-k">yield</span> <span class="pl-s1">return</span> <span class="pl-s1">rq</span><span class="pl-kos">;</span> 
+        <span class="pl-c">//通过yield return 一个ResourceRequest 可以让协程知道在运行异步加载</span>
+
+        <span class="pl-c">//Unity 会自己判断 该资源是否加载完毕了 加载完毕过后 才会继续执行后面的代码</span>
+
+         <span class="pl-c">//另一种判断资源是否加载的方式 </span>
+        <span class="pl-c">//判断资源是否加载结束</span>
+        <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">rq</span><span class="pl-kos">.</span><span class="pl-c1">isDone</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//打印当前的 加载进度 </span>
+            <span class="pl-c">//该进度 不会特别准确 过渡也不是特别明显</span>
+            <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">rq</span><span class="pl-kos">.</span><span class="pl-c1">progress</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">yield</span> <span class="pl-s1">return</span> <span class="pl-s1">null</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-s1">tex</span> <span class="pl-c1">=</span> <span class="pl-s1">rq</span><span class="pl-kos">.</span><span class="pl-c1">asset</span> <span class="pl-s1">as</span> <span class="pl-v">Texture</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//yield return null;</span>
+        <span class="pl-c">////第二部分</span>
+        <span class="pl-c">//yield return new WaitForSeconds(2f);</span>
+        <span class="pl-c">////第三部分</span>
+    <span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
