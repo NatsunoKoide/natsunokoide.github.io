@@ -126,6 +126,35 @@ f[i][j]=f[i−1][j]+f[i][j−i]  （类似于完全背包的推导）<br>
     <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">n</span><span class="pl-kos">]</span><span class="pl-kos">[</span><span class="pl-s1">n</span><span class="pl-kos">]</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">endl</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>一维优化完全背包代码</p>
+</blockquote>
+<blockquote>
+<p>替换：f[i][j] = f[i-1][j] + f[i][j-1]<br>
+优化一维：f[j] = f[j] + f[j-i]</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">int</span> <span class="pl-v">N</span> <span class="pl-c1">=</span> <span class="pl-c1">1e3</span> <span class="pl-c1">+</span> <span class="pl-c1">10</span><span class="pl-kos">,</span><span class="pl-s1">mod</span> <span class="pl-c1">=</span> <span class="pl-c1">1e9</span> <span class="pl-c1">+</span> <span class="pl-c1">7</span><span class="pl-kos">;</span>
+<span class="pl-s1">int</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-v">N</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+<span class="pl-s1">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+    <span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+    <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span> 
+    <span class="pl-c">//容量为0 前i个物品全不选也是一种方案</span>
+    <span class="pl-c">//等价之后的一维dp代码</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span><span class="pl-kos">;</span><span class="pl-s1">j</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">j</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">+</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">j</span> <span class="pl-c1">-</span> <span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-c1">%</span> <span class="pl-s1">mod</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">f</span><span class="pl-kos">[</span><span class="pl-s1">n</span><span class="pl-kos">]</span> <span class="pl-c1">&lt;&lt;</span><span class="pl-s1">endl</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

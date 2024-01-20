@@ -58,3 +58,32 @@ int main() {
     return 0;
 }
 ```
+
+> 一维优化完全背包代码
+
+> 替换：f[i][j] = f[i-1][j] + f[i][j-1]
+   优化一维：f[j] = f[j] + f[j-i]
+```js
+#include <iostream>
+using namespace std;
+
+const int N = 1e3 + 10,mod = 1e9 + 7;
+int f[N];
+int main()
+{
+    int n;
+    cin >> n;
+    f[0] = 1; 
+    //容量为0 前i个物品全不选也是一种方案
+    //等价之后的一维dp代码
+    for(int i = 1;i <= n;i++)
+    {
+        for(int j = i;j <= n;j++)
+        {
+            f[j] = (f[j] + f[j - i]) % mod;
+        }
+    }
+    cout << f[n] <<endl;
+    return 0;
+}
+```
