@@ -169,6 +169,49 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-kos">}</span>
     <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span></pre></div>
+<h3>acwing题解区提供的写法</h3>
+<p>作者：Alicia编程果果<br>
+链接：<a href="https://www.acwing.com/solution/content/7128/" rel="nofollow">https://www.acwing.com/solution/content/7128/</a><br>
+来源：AcWing</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"># <span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+# <span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">cmath</span><span class="pl-c1">&gt;</span>
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-en">int</span> <span class="pl-s1">dgt</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">)</span> <span class="pl-c">// 计算整数n有多少位</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span> <span class="pl-c1">++</span> <span class="pl-s1">res</span><span class="pl-kos">,</span> <span class="pl-s1">n</span> <span class="pl-c1">/=</span> <span class="pl-c1">10</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-en">int</span> <span class="pl-s1">cnt</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">,</span> <span class="pl-s1">int</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c">// 计算从1到n的整数中数字i出现多少次 </span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">d</span> <span class="pl-c1">=</span> <span class="pl-en">dgt</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span> <span class="pl-s1">j</span> <span class="pl-c1">&lt;=</span> <span class="pl-s1">d</span><span class="pl-kos">;</span> <span class="pl-c1">++</span> <span class="pl-s1">j</span><span class="pl-kos">)</span> <span class="pl-c">// 从右到左第j位上数字i出现多少次</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">// l和r是第j位左边和右边的整数 (视频中的abc和efg); dj是第j位的数字</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-en">pow</span><span class="pl-kos">(</span><span class="pl-c1">10</span><span class="pl-kos">,</span> <span class="pl-s1">j</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">/</span> <span class="pl-s1">p</span> <span class="pl-c1">/</span> <span class="pl-c1">10</span><span class="pl-kos">,</span> <span class="pl-s1">r</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">%</span> <span class="pl-s1">p</span><span class="pl-kos">,</span> <span class="pl-s1">dj</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">/</span> <span class="pl-s1">p</span> <span class="pl-c1">%</span> <span class="pl-c1">10</span><span class="pl-kos">;</span>
+        <span class="pl-c">// 计算第j位左边的整数小于l (视频中xxx = 000 ~ abc - 1)的情况</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-s1">l</span> <span class="pl-c1">*</span> <span class="pl-s1">p</span><span class="pl-kos">;</span> 
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">i</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">l</span><span class="pl-kos">)</span> <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-kos">(</span><span class="pl-s1">l</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-c1">*</span> <span class="pl-s1">p</span><span class="pl-kos">;</span> <span class="pl-c">// 如果i = 0, 左边高位不能全为0(视频中xxx = 001 ~ abc - 1)</span>
+        <span class="pl-c">// 计算第j位左边的整数等于l (视频中xxx = abc)的情况</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span> <span class="pl-kos">(</span><span class="pl-s1">dj</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-kos">(</span><span class="pl-s1">i</span> <span class="pl-c1">||</span> <span class="pl-s1">l</span><span class="pl-kos">)</span> <span class="pl-kos">)</span> <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-s1">p</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span> <span class="pl-kos">(</span><span class="pl-s1">dj</span> <span class="pl-c1">==</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-kos">(</span><span class="pl-s1">i</span> <span class="pl-c1">||</span> <span class="pl-s1">l</span><span class="pl-kos">)</span> <span class="pl-kos">)</span> <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-s1">r</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-en">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">int</span> <span class="pl-s1">a</span><span class="pl-kos">,</span> <span class="pl-s1">b</span><span class="pl-kos">;</span>
+    <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">a</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">b</span> <span class="pl-kos">,</span> <span class="pl-s1">a</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">a</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">b</span><span class="pl-kos">)</span> <span class="pl-en">swap</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">,</span> <span class="pl-s1">b</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;=</span> <span class="pl-c1">9</span><span class="pl-kos">;</span> <span class="pl-c1">++</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-en">cnt</span><span class="pl-kos">(</span><span class="pl-s1">b</span><span class="pl-kos">,</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-en">cnt</span><span class="pl-kos">(</span><span class="pl-s1">a</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span><span class="pl-kos">,</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s">' '</span><span class="pl-kos">;</span>
+        <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">endl</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
