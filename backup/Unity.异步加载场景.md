@@ -101,3 +101,51 @@ public class Lesson20 : MonoBehaviour
 #endregion
 
 ```
+
+### 写一个异步加载场景的管理器
+
+> 管理器代码
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+
+public class SceneMgr 
+{
+    private static SceneMgr instance = new SceneMgr();
+    public static SceneMgr Instance => instance;
+    private SceneMgr() { }
+
+    public void LoadScene(string name,UnityAction action)
+    {
+        AsyncOperation ao = SceneManager.LoadSceneAsync(name);
+        //只是completed加入的委托一定要给予一个参数 此处a并没有用到
+        ao.completed += (a) =>
+         {
+             //通过lamda表达式包裹一层 在内部直接调用外部传入的委托
+             action();
+         };
+    }
+}
+```
+
+> 管理器测试脚本
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson20Test : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        SceneMgr.Instance.LoadScene("Lesson20test", () => 
+        {
+            print("加载结束");
+        });
+    }
+}
+```

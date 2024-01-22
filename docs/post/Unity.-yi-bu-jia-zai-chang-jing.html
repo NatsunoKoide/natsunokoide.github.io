@@ -171,6 +171,51 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-c">//优点：可以在加载过程中处理逻辑，比如进度条更新等</span>
 <span class="pl-c">//缺点：写法较为麻烦，要通过协程</span>
 #<span class="pl-s1">endregion</span></pre></div>
+<h3>写一个异步加载场景的管理器</h3>
+<blockquote>
+<p>管理器代码</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">.</span><span class="pl-c1">Events</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">.</span><span class="pl-c1">SceneManagement</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">class</span> <span class="pl-v">SceneMgr</span> 
+<span class="pl-kos">{</span>
+    <span class="pl-c1">private</span> <span class="pl-k">static</span> <span class="pl-c1">SceneMgr</span> <span class="pl-c1">instance</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">SceneMgr</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-c1">public</span><span class="pl-kos"></span> <span class="pl-k">static</span> <span class="pl-c1">SceneMgr</span> <span class="pl-v">Instance</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">instance</span><span class="pl-kos">;</span>
+    <span class="pl-en">private</span> <span class="pl-v">SceneMgr</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+
+    <span class="pl-c1">public</span> <span class="pl-s1">void</span> <span class="pl-en">LoadScene</span><span class="pl-kos">(</span><span class="pl-s1">string</span> <span class="pl-s1">name</span><span class="pl-kos">,</span><span class="pl-v">UnityAction</span> <span class="pl-s1">action</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">AsyncOperation</span> <span class="pl-s1">ao</span> <span class="pl-c1">=</span> <span class="pl-v">SceneManager</span><span class="pl-kos">.</span><span class="pl-en">LoadSceneAsync</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//只是completed加入的委托一定要给予一个参数 此处a并没有用到</span>
+        <span class="pl-s1">ao</span><span class="pl-kos">.</span><span class="pl-c1">completed</span> <span class="pl-c1">+=</span> <span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span>
+         <span class="pl-kos">{</span>
+             <span class="pl-c">//通过lamda表达式包裹一层 在内部直接调用外部传入的委托</span>
+             <span class="pl-en">action</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+         <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>管理器测试脚本</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Lesson20Test : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">// Start is called before the first frame update</span>
+    <span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">SceneMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">LoadScene</span><span class="pl-kos">(</span><span class="pl-s">"Lesson20test"</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> 
+        <span class="pl-kos">{</span>
+            <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"加载结束"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
