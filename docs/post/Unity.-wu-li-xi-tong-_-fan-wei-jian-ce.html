@@ -164,6 +164,62 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         #<span class="pl-s1">endregion</span>
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div>
+<h3>写一个cube wasd移动转向+jkl检测物体</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Lesson22_exercises : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">float</span> <span class="pl-s1">moveSpeed</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">float</span> <span class="pl-s1">roundSpeed</span> <span class="pl-c1">=</span> <span class="pl-c1">20</span><span class="pl-kos">;</span>
+    <span class="pl-c">// Start is called before the first frame update</span>
+    <span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// Update is called once per frame</span>
+    <span class="pl-k">void</span> <span class="pl-v">Update</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//Input.GetAxis("Horizontal"); //控制左右</span>
+        <span class="pl-c">//Input.GetAxis("vertical"); //控制前后</span>
+        <span class="pl-c">//位移</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-en">Translate</span><span class="pl-kos">(</span><span class="pl-v">Vector3</span><span class="pl-kos">.</span><span class="pl-c1">forward</span> <span class="pl-c1">*</span> <span class="pl-v">Time</span><span class="pl-kos">.</span><span class="pl-c1">deltaTime</span> <span class="pl-c1">*</span> <span class="pl-s1">moveSpeed</span> <span class="pl-c1">*</span> <span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetAxis</span><span class="pl-kos">(</span><span class="pl-s">"Vertical"</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//旋转</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-en">Rotate</span><span class="pl-kos">(</span><span class="pl-v">Vector3</span><span class="pl-kos">.</span><span class="pl-c1">up</span><span class="pl-kos">,</span> <span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetAxis</span><span class="pl-kos">(</span><span class="pl-s">"Horizontal"</span><span class="pl-kos">)</span> <span class="pl-c1">*</span> <span class="pl-s1">roundSpeed</span> <span class="pl-c1">*</span> <span class="pl-v">Time</span><span class="pl-kos">.</span><span class="pl-c1">deltaTime</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetKeyDown</span><span class="pl-kos">(</span><span class="pl-v">KeyCode</span><span class="pl-kos">.</span><span class="pl-c1">J</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//Vector3.one 创建的是长宽高的一半</span>
+            <span class="pl-c">//Quaternion.identity 单位四元数 用于占位 本质是0，0，0</span>
+            <span class="pl-c">//this.transform.rotation作为第三个参数这样可以让碰撞体和物体一起转动</span>
+            <span class="pl-v">Collider</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-s1">colliders</span> <span class="pl-c1">=</span> <span class="pl-v">Physics</span><span class="pl-kos">.</span><span class="pl-en">OverlapBox</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">position</span> <span class="pl-c1">+</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">forward</span><span class="pl-kos">,</span> <span class="pl-v">Vector3</span><span class="pl-kos">.</span><span class="pl-c1">one</span> <span class="pl-c1">*</span> <span class="pl-c1">0.5</span><span class="pl-s1">f</span><span class="pl-kos">,</span>
+                                                      <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span><span class="pl-kos">,</span><span class="pl-c1">1</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-v">LayerMask</span><span class="pl-kos">.</span><span class="pl-en">NameToLayer</span><span class="pl-kos">(</span><span class="pl-s">"Monster"</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos"></span><span class="pl-kos">;</span>
+            <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">colliders</span><span class="pl-kos">.</span><span class="pl-c1">Length</span><span class="pl-kos">;</span> <span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"物体受伤"</span> <span class="pl-c1">+</span> <span class="pl-s1">colliders</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">else</span> <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetKeyDown</span><span class="pl-kos">(</span><span class="pl-v">KeyCode</span><span class="pl-kos">.</span><span class="pl-c1">K</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-v">Collider</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-s1">colliders</span> <span class="pl-c1">=</span> <span class="pl-v">Physics</span><span class="pl-kos">.</span><span class="pl-en">OverlapCapsule</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">,</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">position</span> <span class="pl-c1">+</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">forward</span> <span class="pl-c1">*</span> <span class="pl-c1">5</span><span class="pl-kos">,</span>
+                                                          <span class="pl-c1">0.5</span><span class="pl-s1">f</span><span class="pl-kos">,</span><span class="pl-c1">1</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-v">LayerMask</span><span class="pl-kos">.</span><span class="pl-en">NameToLayer</span><span class="pl-kos">(</span><span class="pl-s">"Monster"</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos"></span><span class="pl-kos">;</span>
+            <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">colliders</span><span class="pl-kos">.</span><span class="pl-c1">Length</span><span class="pl-kos">;</span> <span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"物体受伤"</span> <span class="pl-c1">+</span> <span class="pl-s1">colliders</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetKeyDown</span><span class="pl-kos">(</span><span class="pl-v">KeyCode</span><span class="pl-kos">.</span><span class="pl-c1">L</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-v">Collider</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-s1">colliders</span> <span class="pl-c1">=</span> <span class="pl-v">Physics</span><span class="pl-kos">.</span><span class="pl-en">OverlapSphere</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">,</span><span class="pl-c1">10</span><span class="pl-kos">,</span><span class="pl-c1">1</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-v">LayerMask</span><span class="pl-kos">.</span><span class="pl-en">NameToLayer</span><span class="pl-kos">(</span><span class="pl-s">"Monster"</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos"></span><span class="pl-kos">;</span>
+            <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">colliders</span><span class="pl-kos">.</span><span class="pl-c1">Length</span><span class="pl-kos">;</span> <span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"物体受伤"</span> <span class="pl-c1">+</span> <span class="pl-s1">colliders</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

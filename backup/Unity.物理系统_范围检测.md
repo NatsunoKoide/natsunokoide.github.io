@@ -93,3 +93,63 @@ public class Lesson22 : MonoBehaviour
     }
 }
 ```
+
+### 写一个cube wasd移动转向+jkl检测物体
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson22_exercises : MonoBehaviour
+{
+    public float moveSpeed = 10;
+    public float roundSpeed = 20;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Input.GetAxis("Horizontal"); //控制左右
+        //Input.GetAxis("vertical"); //控制前后
+        //位移
+        this.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed * Input.GetAxis("Vertical"));
+        //旋转
+        this.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * roundSpeed * Time.deltaTime);
+
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+            //Vector3.one 创建的是长宽高的一半
+            //Quaternion.identity 单位四元数 用于占位 本质是0，0，0
+            //this.transform.rotation作为第三个参数这样可以让碰撞体和物体一起转动
+            Collider[] colliders = Physics.OverlapBox(this.transform.position + this.transform.forward, Vector3.one * 0.5f,
+                                                      this.transform.rotation,1 << LayerMask.NameToLayer("Monster"));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print("物体受伤" + colliders[i].name);
+            }
+        }
+        else if(Input.GetKeyDown(KeyCode.K))
+        {
+            Collider[] colliders = Physics.OverlapCapsule(this.transform.position,this.transform.position + this.transform.forward * 5,
+                                                          0.5f,1 << LayerMask.NameToLayer("Monster"));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print("物体受伤" + colliders[i].name);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position,10,1 << LayerMask.NameToLayer("Monster"));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print("物体受伤" + colliders[i].name);
+            }
+        }
+    }
+}
+
+```
