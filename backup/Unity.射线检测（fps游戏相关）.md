@@ -4,6 +4,8 @@
 
 > 数组有特殊的api :RaycastAll 用法与 Raycast类似
 
+> 特殊api：RaycastNonAlloc 返回的是碰撞器的数量
+
 ```js
 using System.Collections;
 using System.Collections.Generic;
