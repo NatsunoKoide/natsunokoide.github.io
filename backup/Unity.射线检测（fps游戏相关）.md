@@ -159,5 +159,57 @@ public class Lesson23 : MonoBehaviour
         #endregion
     }
 }
+```
 
+### 实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+_子弹特效和弹孔 已经放入到Resources文件夹_
+```js
+//实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),
+                               out info,
+                               1000,
+                               1 << LayerMask.NameToLayer("Monster")))
+            {
+                //碰撞到的点和法线向量
+                //创建打击特效（特效是一个gameobject）
+                GameObject obj = Instantiate(Resources.Load<GameObject>("Effect/HitEff"));
+                obj.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕
+                //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj.transform.rotation = Quaternion.LookRotation(info.normal);
+                Destroy(obj, 0.8f);
+                //创建弹孔
+                GameObject obj1 = Instantiate(Resources.Load<GameObject>("Effect/DDD"));
+                obj1.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕 //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj1.transform.rotation = Quaternion.LookRotation(info.normal);
+            }
+        }
+```
+
+### 点击立方体 常按可以拖动在平面上移动点击右键取消选中
+```js
+if (Input.GetMouseButtonDown(0))
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000,1 << LayerMask.NameToLayer("Player")))
+            {
+                nowSelObj = info.transform;
+            }
+        }
+        //注意此处 GetMouseButton(0) 和上方鼠标选定 GetMouseButtonDown(0)的区别 前者是常按 后者是 按一下
+        if (Input.GetMouseButton(0) && nowSelObj != null)
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000, 1 << LayerMask.NameToLayer("Floor")))
+            {
+                nowSelObj.position = info.point + Vector3.up * offSetY;
+            }
+        }
+
+        
+        if(Input.GetMouseButtonDown(1))
+        {
+            nowSelObj = null;  
+        }
 ```
