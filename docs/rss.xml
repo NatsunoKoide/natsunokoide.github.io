@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Thu, 25 Jan 2024 08:23:12 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Thu, 25 Jan 2024 08:23:12 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>数据持久化.XML文件读取</title><link>https://natsunokoide.github.io//post/shu-ju-chi-jiu-hua-.XML-wen-jian-du-qu.html</link><description>### XML文件读取&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Fri, 26 Jan 2024 14:05:01 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><pubDate>Fri, 26 Jan 2024 14:05:01 +0000</pubDate><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>数据持久化.XML文件读取</title><link>https://natsunokoide.github.io//post/shu-ju-chi-jiu-hua-.XML-wen-jian-du-qu.html</link><description>### XML文件读取&#13;
 **总结**&#13;
 **1.读取XML文件**&#13;
 XmlDocument xml = new XmlDocument();&#13;
@@ -170,8 +170,8 @@ public class playerInfo&#13;
         playerInfo p = new playerInfo();&#13;
         p.LoadData("PlayerInfo");&#13;
     }&#13;
-```。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/shu-ju-chi-jiu-hua-.XML-wen-jian-du-qu.html</guid><pubDate>Thu, 25 Jan 2024 07:24:48 +0000</pubDate></item><item><title>Acwing.905 区间选点</title><link>https://natsunokoide.github.io//post/Acwing.905%20-qu-jian-xuan-dian.html</link><description>### 题目&#13;
-给定 N个闭区间 [ai,bi]，请你在数轴上选择尽量少的点，使得每个区间内至少包含一个选出的点。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/Acwing.905%20-qu-jian-xuan-dian.html</guid><pubDate>Thu, 25 Jan 2024 03:33:34 +0000</pubDate></item><item><title>Unity.射线检测（fps游戏相关）</title><link>https://natsunokoide.github.io//post/Unity.-she-xian-jian-ce-%EF%BC%88fps-you-xi-xiang-guan-%EF%BC%89.html</link><description>### 射线检测&#13;
+```。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/shu-ju-chi-jiu-hua-.XML-wen-jian-du-qu.html</guid><pubDate>Thu, 25 Jan 2024 07:24:48 +0000</pubDate></item><item><title>Acwing.905 区间选点+AcWing 908. 最大不相交区间数量</title><link>https://natsunokoide.github.io//post/Acwing.905%20-qu-jian-xuan-dian-%2BAcWing%20908.%20-zui-da-bu-xiang-jiao-qu-jian-shu-liang.html</link><description>### 题目&#13;
+给定 N个闭区间 [ai,bi]，请你在数轴上选择尽量少的点，使得每个区间内至少包含一个选出的点。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/Acwing.905%20-qu-jian-xuan-dian-%2BAcWing%20908.%20-zui-da-bu-xiang-jiao-qu-jian-shu-liang.html</guid><pubDate>Thu, 25 Jan 2024 03:33:34 +0000</pubDate></item><item><title>Unity.射线检测（fps游戏相关）</title><link>https://natsunokoide.github.io//post/Unity.-she-xian-jian-ce-%EF%BC%88fps-you-xi-xiang-guan-%EF%BC%89.html</link><description>### 射线检测&#13;
 &#13;
 &gt; 重点内容是 ： 物体信息类 RaycastHit 以及RaycastHit[]数组&#13;
 &#13;
