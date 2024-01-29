@@ -12,8 +12,9 @@
         else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
     </script>
     
-<meta name="description" content="ADd7 search page">
-<title>ADd7 - Tag</title>
+<meta name="description" content="Acwing 148.合并果子">
+<title>Acwing 148.合并果子</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -24,56 +25,105 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </style>
 
 <style>
-.tagTitle{margin:auto 0;font-size:40px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
-
-.subnav-search{width:222px;margin-top:8px;margin-right:8px;}
-.subnav-search-input{width:160px;border-top-right-radius:0px;border-bottom-right-radius:0px;}
-.subnav-search button{padding:5px 8px;border-top-left-radius:0px;border-bottom-left-radius:0px;}
-
-.SideNav-icon{margin-right: 16px}
-.Label{color: #fff;margin-left:8px;}
-.genTime{float: right;}
-.d-flex{min-width:0;}
-.listTitle{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;max-width: 100%;}
-.listLabels{white-space:nowrap;}
-
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
 @media (max-width: 600px) {
-    body { padding: 8px;}
-    .tagTitle{display:none;}
-    .LabelTime{display:none;}
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
 }
 </style>
 
 
+
+
 <body>
     <div id="header">
-<span class="tagTitle"></span>
+<h1 class="postTitle">Acwing 148.合并果子</h1>
 <div class="title-right">
-    <div class="subnav-search">
-        <input type="search" class="form-control subnav-search-input float-left" aria-label="Search site" value="" style="height:32px;">
-        <button class="btn float-left" type="submit" onclick="javascript:searchShow()">搜索</button>
-        <svg class="subnav-search-icon octicon octicon-search" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-            <path id="searchSVG" fill-rule="evenodd" d=""></path>
-        </svg>
-    </div>
+    
     <a href="https://natsunokoide.github.io/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
         </svg>
     </button></a>
-    <button class="btn btn-invisible circle" onclick="modeSwitch()" title="切换主题">
+
+    
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
         <svg class="octicon" width="16" height="16" >
             <path id="themeSwitch" fill-rule="evenodd"></path>
         </svg>
     </button>
+
 </div>
 </div>
     <div id="content">
-<div id="tagLable" style="margin-bottom: 16px;"></div>
-<nav class="SideNav border"></nav>
-<div class="notFind" style="display:none;font-size:24px;margin:8px;">Not Find</div>
+<div class="markdown-body" id="postBody"><h3>题目</h3>
+<p>在一个果园里，达达已经将所有的果子打了下来，而且按果子的不同种类分成了不同的堆。<br>
+达达决定把所有的果子合成一堆。<br>
+每一次合并，达达可以把两堆果子合并到一起，消耗的体力等于两堆果子的重量之和。<br>
+可以看出，所有的果子经过 n−1 次合并之后，就只剩下一堆了。<br>
+达达在合并果子时总共消耗的体力等于每次合并所耗体力之和。<br>
+因为还要花大力气把这些果子搬回家，所以达达在合并果子时要尽可能地节省体力。<br>
+假定每个果子重量都为 1，并且已知果子的种类数和每种果子的数目，你的任务是设计出合并的次序方案，使达达耗费的体力最少，并输出这个最小的体力耗费值。<br>
+例如有 3 种果子，数目依次为 1，2，9。<br>
+可以先将 1、2 堆合并，新堆数目为 3，耗费体力为 3。<br>
+接着，将新堆与原先的第三堆合并，又得到新的堆，数目为 12，耗费体力为 12。<br>
+所以达达总共耗费体力=3+12=15。<br>
+可以证明 15为最小的体力耗费值。</p>
+<h3>题目简述</h3>
+<p>本质就是哈夫曼问题，贪心问题（局部最优得到全局最优）</p>
+<h3>方法</h3>
+<p>利用小根堆完成对于最小权重的合并 最后得到最优解</p>
+<h3>输入格式</h3>
+<p>输入包括两行，第一行是一个整数 n，表示果子的种类数。<br>
+第二行包含 n个整数，用空格分隔，第 i 个整数 ai是第 i 种果子的数目</p>
+<h3>输出格式</h3>
+<p>输出包括一行，这一行只包含一个整数，也就是最小的体力耗费值。<br>
+输入数据保证这个值小于 2的31次方。</p>
+<blockquote>
+<p>代码(这题真不难——归类于Huffman tree)</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate">#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">iostream</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">queue</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">vector</span><span class="pl-c1">&gt;</span>
+#<span class="pl-s1">include</span> <span class="pl-c1">&lt;</span><span class="pl-s1">algorithm</span><span class="pl-c1">&gt;</span>
+<span class="pl-s1">using</span> <span class="pl-s1">namespace</span> <span class="pl-s1">std</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-kos">,</span><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span><span class="pl-kos">,</span><span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">heap</span><span class="pl-kos">;</span>
+
+<span class="pl-en">int</span> <span class="pl-s1">main</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">x</span><span class="pl-kos">;</span>
+        <span class="pl-s1">cin</span> <span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">x</span><span class="pl-kos">;</span>
+        <span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">x</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    
+    <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">1</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">a</span> <span class="pl-c1">=</span> <span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">top</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span><span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">top</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span><span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">c</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s1">b</span><span class="pl-kos">;</span>
+        <span class="pl-s1">heap</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">c</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-s1">c</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-s1">cout</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">res</span> <span class="pl-c1">&lt;&lt;</span> <span class="pl-s1">endl</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="https://natsunokoide.github.io/"> ADd7 </a>
 <p><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20023628号</a>
@@ -126,143 +176,45 @@ console.log("\n %c Gmeek last %c https://github.com/Meekdai/Gmeek \n\n", "color:
 </script>
 
 <script>
-document.getElementById("searchSVG").setAttribute("d",IconList["search"]);
 
-tagList=[];
-jsonData='';
-let requestJson="postList.json"
-let request=new XMLHttpRequest();
-request.open("GET",requestJson);
-request.responseType='text';
-request.send();
-request.onload=function(){
-    jsonData=JSON.parse(request.response);
-    console.log(jsonData);
-    showList();
-    setClassDisplay(decodeURI(window.location.hash.slice(1)));
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","NatsunoKoide/natsunokoide.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
 }
 
-function showList(){
-    let SideNav=document.getElementsByClassName("SideNav")[0];
-    let tagLable=document.getElementById("tagLable");
-
-    if(tagList.length==0){
-        let showLabels=document.createElement("button");
-        showLabels.setAttribute("class","Label");
-        showLabels.setAttribute("style","background-color:#000");
-        showLabels.innerHTML="All";
-        showLabels.setAttribute("onclick","javascript:updateShowTag('All');");
-        tagLable.appendChild(showLabels);
-    }
-    for(i in jsonData){
-        if(!(tagList.includes(jsonData[i]['label']))){
-            tagList.push(jsonData[i]['label']);
-            let showLabels=document.createElement("button");
-            showLabels.setAttribute("class","Label");
-            showLabels.setAttribute("style","background-color:"+jsonData[i]['labelColor']);
-            showLabels.innerHTML=jsonData[i]['label'];
-            showLabels.setAttribute("onclick","javascript:updateShowTag('"+jsonData[i]['label']+"');");
-            tagLable.appendChild(showLabels);
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
         }
-
-        let div=document.createElement("div");
-        div.setAttribute("class","lists "+jsonData[i]['label']);
-        let item=document.createElement("a");
-        item.setAttribute("class","SideNav-item d-flex flex-items-center flex-justify-between");
-        item.setAttribute("href",jsonData[i]['postUrl']);
-
-        let center=document.createElement("div");
-        center.setAttribute("class","d-flex flex-items-center");
-
-        svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-        path=document.createElementNS("http://www.w3.org/2000/svg","path"); 
-        span=document.createElement("span");
-        svg.setAttributeNS(null,"class","SideNav-icon octicon");
-        svg.setAttributeNS(null,"style","witdh:16px;height:16px");
-        path.setAttributeNS(null, "d", IconList["post"]);
-        svg.appendChild(path);
-
-        let title=document.createElement("span");
-        title.setAttribute("class","listTitle");
-        title.innerHTML=jsonData[i]['postTitle'];
-        center.appendChild(svg);
-        center.appendChild(title);
-
-        let listLabels=document.createElement("div");
-        listLabels.setAttribute("class","listLabels");
-        let LabelName=document.createElement("span");
-        LabelName.setAttribute("class","Label LabelName");
-        LabelName.setAttribute("style","background-color:"+jsonData[i]['labelColor']);
-        LabelName.innerHTML=jsonData[i]['label'];
-        listLabels.appendChild(LabelName);
-        let LabelTime=document.createElement("span");
-        LabelTime.setAttribute("class","Label LabelTime");
-        LabelTime.setAttribute("style","background-color:"+jsonData[i]['dateLabelColor']);
-        LabelTime.innerHTML=jsonData[i]['createdDate'];
-        listLabels.appendChild(LabelTime);
-
-        item.appendChild(center);
-        item.appendChild(listLabels);
-        div.appendChild(item);
-        SideNav.appendChild(div);
     }
-}
-
-function updateShowTag(label){
-    if(window.location.hash.slice(1)!=encodeURI(label)){
-        window.location.hash="#"+(label);
-        setClassDisplay(label);
-    }
-}
-
-function setClassDisplay(lable){
-    let lists = document.getElementsByClassName("lists");
-    let tagTitle = document.getElementsByClassName("tagTitle")[0];
-    tagTitle.innerHTML="Tag #"+lable;
-    document.title=lable+" - Meekdai";
-    document.getElementsByClassName("subnav-search-input")[0].value='';
-    if(lable=="All"){
-        for(let i = 0; i < lists.length; i++){lists[i].style.display='block';}
-        document.getElementsByClassName("notFind")[0].style.display='none';
-    }
-    else if(tagList.indexOf(lable)!=-1){
-        for(let i = 0; i < lists.length; i++){
-            lists[i].style.display='none';
-        }
-
-        let lables = document.getElementsByClassName(lable);
-        for(let i = 0; i < lables.length; i++){
-            lables[i].style.display='block';
-        }
-        document.getElementsByClassName("notFind")[0].style.display='none';
-    }
-    else{
-        document.getElementsByClassName("subnav-search-input")[0].value=lable;
-        searchShow();
-    }
-}
-
-function searchShow(){
-    let lists = document.getElementsByClassName("lists");
-    let tagTitle = document.getElementsByClassName("tagTitle")[0];
-    let searchInput = document.getElementsByClassName("subnav-search-input")[0].value;
-    tagTitle.innerHTML="Search #"+searchInput;
-    if(searchInput==''){document.title="Search - Meekdai";}
-    else{document.title=searchInput+" - Meekdai";}
-    let a=0;
-    window.location.hash="#"+(searchInput);
-    for(let i = 0; i < lists.length; i++){
-        if(lists[i].childNodes[0].childNodes[0].childNodes[1].innerHTML.toUpperCase().indexOf(searchInput.toUpperCase())==-1){lists[i].style.display='none';}
-        else{lists[i].style.display='block';a=a+1;}
-    }
-    if(a==0){
-        let notFind=document.getElementsByClassName("notFind")[0];
-        notFind.style.display='block';
-        notFind.innerHTML='Not Find "'+searchInput+'"';
-    }
-    else{document.getElementsByClassName("notFind")[0].style.display='none';}
 }
 
 </script>
+
+
+
 
 </html>
