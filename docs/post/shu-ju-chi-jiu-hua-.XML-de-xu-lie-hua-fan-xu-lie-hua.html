@@ -238,7 +238,95 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-kos">{</span>
             <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TestLesson3</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             <span class="pl-s1">t</span> <span class="pl-c1">=</span> <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span> <span class="pl-s1">as</span> <span class="pl-v">TestLesson3</span><span class="pl-kos">;</span>
-        <span class="pl-kos">}</span></pre></div></div>
+        <span class="pl-kos">}</span></pre></div>
+<h3>4.让IXmlSerializer接口支持Dictionnary数据结构</h3>
+<blockquote>
+<p>自己写一个SerizlizerDictionnary</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">.</span><span class="pl-c1">Schema</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">.</span><span class="pl-c1">Serialization</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> <span class="pl-v">SerizlizerDictionary</span><span class="pl-c1">&lt;</span><span class="pl-v">TKey</span><span class="pl-kos">,</span> <span class="pl-v">TValue</span><span class="pl-c1">&gt;</span> : <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-v">TKey</span><span class="pl-kos">,</span> <span class="pl-v">TValue</span><span class="pl-c1">&gt;</span><span class="pl-kos">,</span> <span class="pl-v">IXmlSerializable</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">public</span> <span class="pl-v">XmlSchema</span> <span class="pl-v">GetSchema</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 自定义字典的序列化规则</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="writer"&gt;&lt;/param&gt;</span>
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">WriteXml</span><span class="pl-kos">(</span><span class="pl-v">XmlWriter</span> <span class="pl-s1">writer</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//声明键和值的“翻译器”</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">keySer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TKey</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">valueSer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TValue</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//遍历自己的键和值</span>
+        <span class="pl-en">foreach</span> <span class="pl-kos">(</span><span class="pl-v">KeyValuePair</span><span class="pl-c1">&lt;</span><span class="pl-v">TKey</span><span class="pl-kos">,</span> <span class="pl-v">TValue</span><span class="pl-c1">&gt;</span> <span class="pl-s1">kv</span> <span class="pl-k">in</span> <span class="pl-smi">this</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//对键值对序列化</span>
+            <span class="pl-s1">keySer</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span> <span class="pl-s1">kv</span><span class="pl-kos">.</span><span class="pl-c1">Key</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">valueSer</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span> <span class="pl-s1">kv</span><span class="pl-kos">.</span><span class="pl-c1">Value</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 自定义字典的反序列化规则</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="reader"&gt;&lt;/param&gt;</span>
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">ReadXml</span><span class="pl-kos">(</span><span class="pl-v">XmlReader</span> <span class="pl-s1">reader</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//声明键和值的“翻译器”</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">keySer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TKey</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">valueSer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TValue</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//跳过根节点</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">Read</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//只要没读到End节点 就一直读</span>
+        <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-c1">NodeType</span> <span class="pl-c1">!=</span> <span class="pl-v">XmlNodeType</span><span class="pl-kos">.</span><span class="pl-c1">EndElement</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//解析键</span>
+            <span class="pl-v">TKey</span> <span class="pl-s1">key</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-v">TKey</span><span class="pl-kos">)</span><span class="pl-s1">keySer</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//解析值</span>
+            <span class="pl-v">TValue</span> <span class="pl-s1">value</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-v">TValue</span><span class="pl-kos">)</span><span class="pl-s1">valueSer</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//把读到的值加进去</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">key</span><span class="pl-kos">,</span> <span class="pl-s1">value</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-c">//把End节点读了，避免影响之后的数据读取</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">Read</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>使用SerizlizerDictionary&lt;int, string&gt; dic</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">public</span> <span class="pl-k">class</span> <span class="pl-v">TestLesson4</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c1">public</span> <span class="pl-s1">int</span> <span class="pl-s1">test1</span><span class="pl-kos">;</span>
+    <span class="pl-c1">public</span> <span class="pl-v">SerizlizerDictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-kos">,</span> <span class="pl-s1">string</span><span class="pl-c1">&gt;</span> <span class="pl-c1">dic</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Lesson4 : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">// Start is called before the first frame update</span>
+    <span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">TestLesson4</span> <span class="pl-s1">tl4</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">TestLesson4</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">tl4</span><span class="pl-kos">.</span><span class="pl-c1">dic</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">SerizlizerDictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-kos">,</span> <span class="pl-s1">string</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">tl4</span><span class="pl-kos">.</span><span class="pl-c1">dic</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">,</span> <span class="pl-s">"123"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">tl4</span><span class="pl-kos">.</span><span class="pl-c1">dic</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-c1">3</span><span class="pl-kos">,</span> <span class="pl-s">"321"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">string</span> <span class="pl-s1">path</span> <span class="pl-c1">=</span> <span class="pl-v">Application</span><span class="pl-kos">.</span><span class="pl-c1">persistentDataPath</span> <span class="pl-c1">+</span> <span class="pl-s">"/TestLesson4.xml"</span><span class="pl-kos">;</span>
+        <span class="pl-en">using</span> <span class="pl-kos">(</span><span class="pl-v">StreamWriter</span> <span class="pl-s1">writer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">StreamWriter</span><span class="pl-kos">(</span><span class="pl-s1">path</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TestLesson4</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span><span class="pl-s1">tl4</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
