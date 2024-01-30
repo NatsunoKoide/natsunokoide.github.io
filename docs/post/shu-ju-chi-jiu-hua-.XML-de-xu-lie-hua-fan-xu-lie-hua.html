@@ -145,7 +145,100 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>定义：C# 的XmlSerializer 提供了可拓展内容，可以让一些不能被序列化和反序列化的特殊类能被处理，让特殊类继承 IXmlSerializable 接口实现其中的方法即可</p>
 <blockquote>
 <p>提供一个继承了该接口的类</p>
-</blockquote></div>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">public</span> <span class="pl-s1">class</span> TestLesson3 : <span class="pl-v">IXmlSerializable</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">int</span> <span class="pl-s1">test1</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">int</span> <span class="pl-s1">test2</span> <span class="pl-c1">=</span> <span class="pl-c1">99</span><span class="pl-kos">;</span>
+
+<span class="pl-c">//默认写return null即可；</span>
+    <span class="pl-s1">public</span> <span class="pl-v">XmlSchema</span> <span class="pl-v">GetSchema</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">ReadXml</span><span class="pl-kos">(</span><span class="pl-v">XmlReader</span> <span class="pl-s1">reader</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//读属性</span>
+        <span class="pl-c">//test1 = int.Parse(reader["Test1"]);</span>
+        <span class="pl-c">//test2 = int.Parse(reader["Test2"]);</span>
+
+        <span class="pl-c">//读节点</span>
+        <span class="pl-c">//方式一</span>
+        <span class="pl-c">//reader.Read();//这时读到的是节点</span>
+        <span class="pl-c">//reader.Read();//这时读到的才是值</span>
+        <span class="pl-c">//test1 = int.Parse(reader.Value);//得到值内容</span>
+        <span class="pl-c">//reader.Read();//得到节点尾部配对</span>
+        <span class="pl-c">//reader.Read();//读到节点开头</span>
+        <span class="pl-c">//reader.Read();//读到值</span>
+        <span class="pl-c">//test2 = int.Parse(reader.Value);//获取值内容</span>
+        <span class="pl-c">//方式二</span>
+        <span class="pl-c">//while (reader.Read())</span>
+        <span class="pl-c">//{</span>
+        <span class="pl-c">//    if(reader.NodeType == XmlNodeType.Element)</span>
+        <span class="pl-c">//    {</span>
+        <span class="pl-c">//        switch (reader.Name)</span>
+        <span class="pl-c">//        {</span>
+        <span class="pl-c">//            case "Test1":</span>
+        <span class="pl-c">//                reader.Read();</span>
+        <span class="pl-c">//                test1 = int.Parse(reader.Value) ;</span>
+        <span class="pl-c">//                break;</span>
+        <span class="pl-c">//            case "Test2":</span>
+        <span class="pl-c">//                reader.Read();</span>
+        <span class="pl-c">//                test2 = int.Parse(reader.Value);</span>
+        <span class="pl-c">//                break;</span>
+        <span class="pl-c">//        }</span>
+        <span class="pl-c">//    }</span>
+        <span class="pl-c">//}</span>
+
+        <span class="pl-c">//读包裹点</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-s1">int</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//过根节点</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">Read</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">ReadStartElement</span><span class="pl-kos">(</span><span class="pl-s">"Test1"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">test1</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">int</span><span class="pl-kos">)</span><span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">ReadEndElement</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">ReadStartElement</span><span class="pl-kos">(</span><span class="pl-s">"Test2"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">test1</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">int</span><span class="pl-kos">)</span><span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">ReadEndElement</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">WriteXml</span><span class="pl-kos">(</span><span class="pl-v">XmlWriter</span> <span class="pl-s1">writer</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//写属性</span>
+        <span class="pl-c">//writer.WriteAttributeString("Test1", test1.ToString());</span>
+        <span class="pl-c">//writer.WriteAttributeString("Test2", test2.ToString());</span>
+
+        <span class="pl-c">//写节点</span>
+        <span class="pl-c">//writer.WriteElementString("Test1", test1.ToString());</span>
+        <span class="pl-c">//writer.WriteElementString("Test2", test2.ToString());</span>
+
+        <span class="pl-c">//写包裹节点</span>
+        <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-s1">int</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">writer</span><span class="pl-kos">.</span><span class="pl-en">WriteStartElement</span><span class="pl-kos">(</span><span class="pl-s">"Test1"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span> <span class="pl-s1">test1</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">writer</span><span class="pl-kos">.</span><span class="pl-en">WriteEndElement</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-s1">writer</span><span class="pl-kos">.</span><span class="pl-en">WriteStartElement</span><span class="pl-kos">(</span><span class="pl-s">"Test2"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span> <span class="pl-s1">test2</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">writer</span><span class="pl-kos">.</span><span class="pl-en">WriteEndElement</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>对上面这个类 进行 序列化与反序列化</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate">        <span class="pl-v">TestLesson3</span> <span class="pl-s1">t</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">TestLesson3</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-en">using</span> <span class="pl-kos">(</span><span class="pl-v">StreamWriter</span> <span class="pl-s1">writer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">StreamWriter</span><span class="pl-kos">(</span><span class="pl-v">Application</span><span class="pl-kos">.</span><span class="pl-c1">persistentDataPath</span> <span class="pl-c1">+</span> <span class="pl-s">"/test.xml"</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TestLesson3</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Serialize</span><span class="pl-kos">(</span><span class="pl-s1">writer</span><span class="pl-kos">,</span> <span class="pl-s1">t</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        <span class="pl-en">using</span><span class="pl-kos">(</span><span class="pl-v">StreamReader</span> <span class="pl-s1">reader</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">StreamReader</span><span class="pl-kos">(</span><span class="pl-v">Application</span><span class="pl-kos">.</span><span class="pl-c1">persistentDataPath</span> <span class="pl-c1">+</span> <span class="pl-s">"/test.xml"</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-v">XmlSerializer</span> <span class="pl-s1">s</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">XmlSerializer</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">TestLesson3</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">t</span> <span class="pl-c1">=</span> <span class="pl-s1">s</span><span class="pl-kos">.</span><span class="pl-en">Deserialize</span><span class="pl-kos">(</span><span class="pl-s1">reader</span><span class="pl-kos">)</span> <span class="pl-s1">as</span> <span class="pl-v">TestLesson3</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
