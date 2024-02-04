@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Sun, 04 Feb 2024 08:20:30 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.Panel控件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Panel-kong-jian.html</link><description>### Panel控件参数&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Sun, 04 Feb 2024 09:20:00 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.EventSystem控件 </title><link>https://natsunokoide.github.io//post/UI.NGUI.EventSystem-kong-jian-%20.html</link><description>### EventSystem控件 &#13;
+![EventSystem参数1](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/859b8eca-d747-473d-bc55-807fc3ac5608)&#13;
+![EventSystem参数2](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/ff0e2ea5-d8b9-4455-95b6-60f4357296f7)&#13;
+&#13;
+### 总结&#13;
+1.如果没有EventSystem，没有办法监听玩家输入&#13;
+2.创建UI时的 2DUI 和3DUI 主要就是摄像机的模式不一样&#13;
+EventSystem的2D和3D主要是 采用2D碰撞器 还是3D碰撞器 不能直接改变摄像机模式。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/UI.NGUI.EventSystem-kong-jian-%20.html</guid><pubDate>Sun, 04 Feb 2024 09:19:21 +0000</pubDate></item><item><title>UI.NGUI.Panel控件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Panel-kong-jian.html</link><description>### Panel控件参数&#13;
 ![panel重要参数](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/a6c67231-ec59-4f4f-82f9-73cbd2682191)&#13;
 ![panel次要参数](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/e53f032f-4957-4995-b905-0f631d3516fb)&#13;
 &#13;
