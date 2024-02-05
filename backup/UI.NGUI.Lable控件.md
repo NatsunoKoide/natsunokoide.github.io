@@ -6,3 +6,7 @@
 
 ### 富文本内容
 ![富文本](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/2abe1dbf-53a3-4fa9-83ae-577555be69b0)
+
+### 代码相关
+1.创建： public UILable lable；
+2.得到内容： lable.text = " xxxx "；
