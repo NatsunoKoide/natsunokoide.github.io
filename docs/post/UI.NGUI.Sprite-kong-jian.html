@@ -12,9 +12,9 @@
         else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
     </script>
     
-<meta name="description" content="C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com">
-<title>ADd7</title>
+<meta name="description" content="UI.NGUI.Sprite控件">
+<title>UI.NGUI.Sprite控件</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -25,85 +25,82 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </style>
 
 <style>
-.avatar {transition: 0.8s;width:64px;height:64px;}
-.avatar:hover{transform: scale(1.15) rotate(360deg);}
-#header h1 a{color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;font-family:Monaco;margin-left:8px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
-.title-right button{margin-right:8px;padding:16px;}
-.title-right .circle{padding: 14px 16px;}
-
-.SideNav{min-width: 360px;}
-.SideNav-icon{margin-right: 16px}
-.SideNav-item .Label{color: #fff;margin-left:8px;}
-.d-flex{min-width:0;}
-.listTitle{overflow:hidden;white-space:nowrap;text-overflow: ellipsis;max-width: 100%;}
-.listLabels{white-space:nowrap;}
-.listLabels object{max-height:16px;max-width:24px;}
-
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
 @media (max-width: 600px) {
     body {padding: 8px;}
-    .avatar {width:40px;height:40px;}
-    .blogTitle{display:none;}
-    #buttonRSS{display:none;}
-    .LabelTime{display:none;}
+    .postTitle{font-size:24px;}
 }
 </style>
 
 
+
+
 <body>
     <div id="header">
-<h1>
-    <img src="https://i.postimg.cc/dtT4J441/image.png" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle">ADd7</a></h1>
+<h1 class="postTitle">UI.NGUI.Sprite控件</h1>
 <div class="title-right">
-    <a href="https://natsunokoide.github.io//tag.html"><button id="buttonSearch" class="btn btn-invisible circle" title="搜索">
-        <svg class="octicon" width="16" height="16" >
-            <path id="pathSearch" fill-rule="evenodd"></path>
-        </svg>
-    </button></a>
     
-    <a href="https://natsunokoide.github.io//rss.xml" target="_blank"><button id="buttonRSS" class="btn btn-invisible circle" title="RSS">
-        <svg class="octicon" width="16" height="16" >
-            <path id="pathRSS" fill-rule="evenodd"></path>
+    <a href="https://natsunokoide.github.io/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
         </svg>
     </button></a>
-    <button class="btn btn-invisible circle" onclick="modeSwitch()" title="切换主题">
+
+    
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
         <svg class="octicon" width="16" height="16" >
             <path id="themeSwitch" fill-rule="evenodd"></path>
         </svg>
     </button>
+
 </div>
 </div>
     <div id="content">
-<div style="margin-bottom: 16px;">C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</div>
-<nav class="SideNav border">
-<a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Acwing%20899.-man-zu-tiao-jian-de-01-xu-lie.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="witdh:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">Acwing 899.满足条件的01序列</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#F22BFA"><object><a style="color:#fff" href="https://natsunokoide.github.io//tag.html#Algorithm">Algorithm</a></object></span>
-        <span class="Label LabelTime" style="background-color:#A333D0">2023-12-16</span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Acwing%20888.-qiu-zu-he-shu-IV%20.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="witdh:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">Acwing 888.求组合数IV </span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#F22BFA"><object><a style="color:#fff" href="https://natsunokoide.github.io//tag.html#Algorithm">Algorithm</a></object></span>
-        <span class="Label LabelTime" style="background-color:#A333D0">2023-12-14</span>
-    </div>
-</a>
-</nav><nav class="paginate-container" aria-label="Pagination">
-    <div class="pagination"><a class="previous_page" rel="previous" href="https://natsunokoide.github.io//page4.html" aria-label="Previous Page">上一页</a><span class="next_page" aria-disabled="true">下一页</span>
-        </div>
-</nav>
+<div class="markdown-body" id="postBody"><h3>Sprite控件</h3>
+<h3>作用</h3>
+<p>NGUI中所有中小尺寸图片显示都用Sprite显示，使用它来显示图集中的单个图片资源</p>
+<h3>参数</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/b745b945-4b7f-4daf-8980-d8f7e0f94b07"><img src="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/b745b945-4b7f-4daf-8980-d8f7e0f94b07" alt="sprite参数1" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/b0e6998e-9c62-4420-bee0-f2fc941de96e"><img src="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/b0e6998e-9c62-4420-bee0-f2fc941de96e" alt="sprite参数2" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/146cb5b7-786b-4c0e-812e-93347c226da0"><img src="https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/146cb5b7-786b-4c0e-812e-93347c226da0" alt="sprite参数3" style="max-width: 100%;"></a></p>
+<h3>代码相关内容</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Lesson3 : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">//定义精灵图</span>
+    <span class="pl-s1">public</span> <span class="pl-v">UISprite</span> <span class="pl-s1">sprite</span><span class="pl-kos">;</span>
+    <span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//设置长宽</span>
+        <span class="pl-s1">sprite</span><span class="pl-kos">.</span><span class="pl-c1">width</span> <span class="pl-c1">=</span> <span class="pl-c1">200</span><span class="pl-kos">;</span>
+        <span class="pl-s1">sprite</span><span class="pl-kos">.</span><span class="pl-c1">height</span> <span class="pl-c1">=</span> <span class="pl-c1">300</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//改变为当前图集中选择的图片</span>
+        <span class="pl-s1">sprite</span><span class="pl-kos">.</span><span class="pl-c1">spriteName</span> <span class="pl-c1">=</span> <span class="pl-s">"bk"</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//2.改变为其它图集中的图片</span>
+        <span class="pl-c">//先加载图集</span>
+        <span class="pl-c">//图集在 NGUIAtlas 类中 使用Resources直接加载</span>
+        <span class="pl-v">NGUIAtlas</span> <span class="pl-s1">atlas</span> <span class="pl-c1">=</span> <span class="pl-v">Resources</span><span class="pl-kos">.</span><span class="pl-c1">Load</span><span class="pl-c1">&lt;</span><span class="pl-v">NGUIAtlas</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">"Atlas/login"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">sprite</span><span class="pl-kos">.</span><span class="pl-c1">atlas</span> <span class="pl-c1">=</span> <span class="pl-s1">atlas</span><span class="pl-kos">;</span>
+        <span class="pl-c">//再设置图片</span>
+        <span class="pl-s1">sprite</span><span class="pl-kos">.</span><span class="pl-c1">spriteName</span> <span class="pl-c1">=</span> <span class="pl-s">"ui_DL_anniuxiao_01"</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="https://natsunokoide.github.io/"> ADd7 </a>
 <p><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20023628号</a>
@@ -156,19 +153,45 @@ console.log("\n %c Gmeek last %c https://github.com/Meekdai/Gmeek \n\n", "color:
 </script>
 
 <script>
-document.getElementById("pathSearch").setAttribute("d",IconList["search"]);
-document.getElementById("pathRSS").setAttribute("d",IconList["rss"]);
-iconTOP=document.getElementsByClassName("svgTop1");
-iconPost=document.getElementsByClassName("svgTop0");
-for(var i=0;i<iconTOP.length;i++){
-    iconTOP[i].setAttribute("d",IconList["upload"]);
-    iconTOP[i].parentNode.style.color="red";
-}
-for(var i=0;i<iconPost.length;i++){
-    iconPost[i].setAttribute("d",IconList["post"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","NatsunoKoide/natsunokoide.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
 }
 
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
 
 </script>
+
+
+
 
 </html>
