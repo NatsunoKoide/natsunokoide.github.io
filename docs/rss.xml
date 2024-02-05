@@ -1,6 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Mon, 05 Feb 2024 13:47:16 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.Sprite控件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Sprite-kong-jian.html</link><description>### Sprite控件&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Mon, 05 Feb 2024 14:08:53 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.Lable控件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Lable-kong-jian.html</link><description>### Lable控件&#13;
+&#13;
+### 基础参数&#13;
+![lable参数1](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/01edb567-8c90-4fb7-a9d5-a415bcd72758)&#13;
+![lable参数2](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/3b92ad46-8f64-40c1-8f0a-69fa4fe82a19)&#13;
+&#13;
+### 富文本内容&#13;
+![富文本](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/2abe1dbf-53a3-4fa9-83ae-577555be69b0)&#13;
+。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/UI.NGUI.Lable-kong-jian.html</guid><pubDate>Mon, 05 Feb 2024 14:08:22 +0000</pubDate></item><item><title>UI.NGUI.Sprite控件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Sprite-kong-jian.html</link><description>### Sprite控件&#13;
 &#13;
 ### 作用&#13;
 NGUI中所有中小尺寸图片显示都用Sprite显示，使用它来显示图集中的单个图片资源&#13;
