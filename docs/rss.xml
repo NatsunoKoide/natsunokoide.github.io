@@ -1,6 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Wed, 07 Feb 2024 14:46:06 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.Slider组件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Slider-zu-jian.html</link><description>### Slider组件&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Thu, 08 Feb 2024 11:34:35 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.NGUI.ScrollBar和ProgressBar组件</title><link>https://natsunokoide.github.io//post/UI.NGUI.ScrollBar-he-ProgressBar-zu-jian.html</link><description>### ScrollBar和ProgressBar组件&#13;
+### 作用&#13;
+1.ScrollBar滚动条一般不单独使用 都是配合滚动视图使用 类似VS右侧的滚动条&#13;
+2.ProgressBar进度条 一般不咋使用   一般直接用Sprite的Filed填充模式即可&#13;
+&#13;
+### 制作&#13;
+1）制作Scrollbar&#13;
+1.两个Sprite 1个背景 1个滚动条&#13;
+2.背景父对象添加脚本&#13;
+3.添加碰撞器&#13;
+4.关联对象&#13;
+&#13;
+1）制作ProgressBar&#13;
+1.两个Sprite 1个背景 1个进度条&#13;
+2.背景父对象添加脚本&#13;
+3.关联对象&#13;
+。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/UI.NGUI.ScrollBar-he-ProgressBar-zu-jian.html</guid><pubDate>Thu, 08 Feb 2024 11:33:55 +0000</pubDate></item><item><title>UI.NGUI.Slider组件</title><link>https://natsunokoide.github.io//post/UI.NGUI.Slider-zu-jian.html</link><description>### Slider组件&#13;
 &#13;
 ### 参数&#13;
 ![参数](https://github.com/NatsunoKoide/natsunokoide.github.io/assets/137853852/ccd56038-cc70-4eac-a9c5-93d91e27ab80)&#13;
