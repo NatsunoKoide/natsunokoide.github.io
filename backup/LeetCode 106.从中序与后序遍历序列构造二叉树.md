@@ -32,8 +32,10 @@ public:
         TreeNode* root = new TreeNode(rootValue);
 
         if(postorder.size() == 1) return root;
-
-        for(int delimiterIndex = 0;delimiterIndex < inorder.size();delimiterIndex++)
+        
+        //这个变量必须定义在for循环外面不然下面的代码使用不了
+        int delimiterIndex;
+        for(delimiterIndex = 0;delimiterIndex < inorder.size();delimiterIndex++)
         {
             if (inorder[delimiterIndex] == rootValue) break;
         }
