@@ -106,6 +106,59 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-kos">}</span>
         <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<blockquote>
+<p>代码1 把1/0换成 bool类型 执行速度慢了一倍 内存减少十倍</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">Solution</span> <span class="pl-kos">{</span>
+<span class="pl-c1">public</span>:
+    <span class="pl-c1">int</span> <span class="pl-en">countPrimes</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">bool</span><span class="pl-c1">&gt;</span> <span class="pl-en">isPrime</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">,</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//如果是质数</span>
+            <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">isPrime</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-c">//是质数答案+1</span>
+                <span class="pl-s1">res</span> <span class="pl-c1">+=</span> <span class="pl-c1">1</span><span class="pl-kos">;</span>
+                <span class="pl-c">//埃氏筛要防止i*i越界</span>
+                <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">long</span> <span class="pl-s1">long</span><span class="pl-kos">)</span> <span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">)</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c">//利用质数去把后面所有跟这个质数有关的数全部判false/0</span>
+                    <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span><span class="pl-kos">;</span><span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">j</span> <span class="pl-c1">+=</span> <span class="pl-s1">i</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-s1">isPrime</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+                
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<blockquote>
+<p>代码2——线性筛 非常推荐的一种算法 既可以得到质数是什么也可以得到质数的个数</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">Solution</span> <span class="pl-kos">{</span>
+<span class="pl-c1">public</span>:
+    <span class="pl-c1">int</span> <span class="pl-en">countPrimes</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">n</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">primes</span><span class="pl-kos">;</span>
+        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">bool</span><span class="pl-c1">&gt;</span> <span class="pl-en">isPrime</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-kos">,</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">int</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span><span class="pl-kos">;</span><span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//如果是质数 就放入primes</span>
+            <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">isPrime</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-s1">primes</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">i</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//线性筛 利用 primes数组</span>
+            <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span><span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span><span class="pl-kos">;</span><span class="pl-s1">j</span><span class="pl-c1">++</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-s1">isPrime</span><span class="pl-kos">[</span><span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+                <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">i</span> <span class="pl-c1">%</span> <span class="pl-s1">primes</span><span class="pl-kos">[</span><span class="pl-s1">j</span><span class="pl-kos">]</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-k">break</span><span class="pl-kos">;</span> 
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-s1">primes</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 <span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
