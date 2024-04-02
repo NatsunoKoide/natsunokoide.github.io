@@ -1,6 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 02 Apr 2024 07:30:38 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.UGUI.EventTrigger摇杆应用</title><link>https://natsunokoide.github.io//post/UI.UGUI.EventTrigger-yao-gan-ying-yong.html</link><description>### EventTrigger摇杆应用&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 02 Apr 2024 07:54:37 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>UI.UGUI.RectTransformUtility中转换屏幕坐标到UI坐标系</title><link>https://natsunokoide.github.io//post/UI.UGUI.RectTransformUtility-zhong-zhuan-huan-ping-mu-zuo-biao-dao-UI-zuo-biao-xi.html</link><description>### RectTransformUtility类 用于转换ui坐标的类&#13;
+### RectTransformUtility.ScreenPointToLocalPointInRectangle的使用&#13;
+&#13;
+&gt; 屏幕点转当前坐标点&#13;
+&#13;
+```js&#13;
+    private Vector2 nowPos;&#13;
+    public void OnDrag(PointerEventData eventData)&#13;
+    {&#13;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(&#13;
+            //相对父对象&#13;
+            this.transform.parent as RectTransform,&#13;
+            //屏幕点&#13;
+            eventData.position,&#13;
+            //摄像机&#13;
+            eventData.enterEventCamera,&#13;
+            //目标点&#13;
+            out nowPos&#13;
+            );&#13;
+        //通过RectTransformUtility.ScreenPointToLocalPointInRectangle函数out出来的目标点&#13;
+        //将目标点赋值给挂载对象即可实现坐标转换&#13;
+        this.transform.localPosition = nowPos;&#13;
+        //上方这种方式 用于优化下方代码 &#13;
+        //this.transform.position += new Vector3(eventData.delta.x, eventData.delta.y, 0);&#13;
+    }&#13;
+```。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/UI.UGUI.RectTransformUtility-zhong-zhuan-huan-ping-mu-zuo-biao-dao-UI-zuo-biao-xi.html</guid><pubDate>Tue, 02 Apr 2024 07:53:59 +0000</pubDate></item><item><title>UI.UGUI.EventTrigger摇杆应用</title><link>https://natsunokoide.github.io//post/UI.UGUI.EventTrigger-yao-gan-ying-yong.html</link><description>### EventTrigger摇杆应用&#13;
 **本文使用EventTrigger实现手机游戏的摇杆控制玩家移动的功能。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/UI.UGUI.EventTrigger-yao-gan-ying-yong.html</guid><pubDate>Tue, 02 Apr 2024 07:29:55 +0000</pubDate></item><item><title>LeetCode331.验证二叉树的前序序列化</title><link>https://natsunokoide.github.io//post/LeetCode331.-yan-zheng-er-cha-shu-de-qian-xu-xu-lie-hua.html</link><description>### 题目&#13;
 序列化二叉树的一种方法是使用 前序遍历 。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/LeetCode331.-yan-zheng-er-cha-shu-de-qian-xu-xu-lie-hua.html</guid><pubDate>Sun, 31 Mar 2024 01:43:01 +0000</pubDate></item><item><title>LeetCode 322+518  零钱兑换Ⅰ+Ⅱ </title><link>https://natsunokoide.github.io//post/LeetCode%20322%2B518%20%20-ling-qian-dui-huan-%E2%85%A0%2B%E2%85%A1%20.html</link><description>### 题目（322）&#13;
 给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总金额。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/LeetCode%20322%2B518%20%20-ling-qian-dui-huan-%E2%85%A0%2B%E2%85%A1%20.html</guid><pubDate>Mon, 25 Mar 2024 07:45:18 +0000</pubDate></item><item><title>LeetCode 2671.频率跟踪器</title><link>https://natsunokoide.github.io//post/LeetCode%202671.-pin-lv-gen-zong-qi.html</link><description>### 题目&#13;
