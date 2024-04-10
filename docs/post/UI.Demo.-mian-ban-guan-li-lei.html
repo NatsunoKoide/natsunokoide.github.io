@@ -85,8 +85,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-c">//管理器 一般都是单例模式</span>
 <span class="pl-s1">public</span> <span class="pl-s1">class</span> UIManager : <span class="pl-v">MonoBehaviour</span>
 <span class="pl-kos">{</span>
-    <span class="pl-s1">private</span> <span class="pl-s1">static</span> <span class="pl-c1">UIManager</span> <span class="pl-s1">instace</span><span class="pl-kos">;</span> 
-    <span class="pl-s1">public</span> <span class="pl-s1">static</span> <span class="pl-c1">UIManager</span> <span class="pl-v">Instance</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">instace</span><span class="pl-kos">;</span>
+    <span class="pl-c">//继承了mono 必须要 对instance进行实例化！！！！！！！！！！！！！！！！！</span>
+    <span class="pl-c">//private static UIManager instace; 这样写是错的 ！！！！！！！！！！！！！！！</span>
+    <span class="pl-s1">private</span> <span class="pl-s1">static</span> <span class="pl-c1">UIManager</span> <span class="pl-s1">instance</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">UIManager</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">static</span> <span class="pl-v">UIManager</span> <span class="pl-v">Instance</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">instace</span><span class="pl-kos">;</span>
 
     <span class="pl-c">//存储面板的容器</span>
     <span class="pl-s1">private</span> <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> <span class="pl-v">BasePanel</span><span class="pl-c1">&gt;</span> <span class="pl-s1">panelDic</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> <span class="pl-v">BasePanel</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>

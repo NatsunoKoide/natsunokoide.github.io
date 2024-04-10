@@ -18,7 +18,9 @@ using UnityEngine;
 //管理器 一般都是单例模式
 public class UIManager : MonoBehaviour
 {
-    private static UIManager instace; 
+    //继承了mono 必须要 对instance进行实例化！！！！！！！！！！！！！！！！！
+    //private static UIManager instace; 这样写是错的 ！！！！！！！！！！！！！！！
+    private static UIManager instance = new UIManager();
     public static UIManager Instance => instace;
 
     //存储面板的容器
