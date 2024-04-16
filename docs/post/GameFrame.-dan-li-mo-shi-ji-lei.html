@@ -176,7 +176,59 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
             <span class="pl-k">return</span> <span class="pl-s1">instance</span><span class="pl-kos">;</span>
         <span class="pl-kos">}</span>
     <span class="pl-kos">}</span>
-<span class="pl-kos">}</span></pre></div></div>
+<span class="pl-kos">}</span></pre></div>
+<h3>安全性优化后的无Mono单例模式基类 （加锁的版本）</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Reflection</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-c">/// &lt;summary&gt;</span>
+<span class="pl-c">/// 安全性优化后的无Mono单例模式基类</span>
+<span class="pl-c">/// 1.class 前加 abstract 防止基类在其他地方被new</span>
+<span class="pl-c">/// 2.利用反射的方式获取子类T中的构造函数信息，使用无参构造实例化instance</span>
+<span class="pl-c">/// &lt;/summary&gt;</span>
+<span class="pl-c">/// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;</span>
+<span class="pl-s1">public</span> <span class="pl-s1">abstract</span> <span class="pl-k">class</span> <span class="pl-v">BaseManagerPro</span><span class="pl-c1">&lt;</span><span class="pl-v">T</span><span class="pl-c1">&gt;</span> <span class="pl-s1">where</span><span class="pl-kos"></span> T : <span class="pl-k">class</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c1">private</span> <span class="pl-k">static</span> <span class="pl-c1">T</span> <span class="pl-c1">instance</span><span class="pl-kos">;</span>
+    <span class="pl-c">//readonly：这表明一旦 lockObj 在构造函数中或者在声明时被初始化之后，就不能被修改。这是一个好的做法，因为锁对象不应该被更换，一旦创建应保持不变。</span>
+    <span class="pl-c">//用于加锁的对象</span>
+    <span class="pl-c1">protected</span><span class="pl-kos"></span> <span class="pl-k">static</span> <span class="pl-c1">readonly</span> <span class="pl-s1">object</span> <span class="pl-s1">lockObj</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-s1">object</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-c1">public</span><span class="pl-kos"></span> <span class="pl-c1">static</span> <span class="pl-c1">T</span> <span class="pl-v">Instance</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c1">get</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//双重判空提升性能</span>
+            <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-c1">instance</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span>
+            <span class="pl-kos">{</span>
+                <span class="pl-en">lock</span> <span class="pl-kos">(</span><span class="pl-s1">lockObj</span><span class="pl-kos">)</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">instance</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c">//利用 反射 得到无参私有构造函数 用来对象的实例化</span>
+                        <span class="pl-v">Type</span> <span class="pl-s1">type</span> <span class="pl-c1">=</span> <span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">T</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-v">ConstructorInfo</span> <span class="pl-s1">info</span> <span class="pl-c1">=</span> <span class="pl-s1">type</span><span class="pl-kos">.</span><span class="pl-en">GetConstructor</span><span class="pl-kos">(</span><span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span> <span class="pl-c1">|</span> <span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">NonPublic</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">,</span> <span class="pl-v">Type</span><span class="pl-kos">.</span><span class="pl-c1">EmptyTypes</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">instance</span> <span class="pl-c1">=</span> <span class="pl-s1">info</span><span class="pl-kos">?.</span><span class="pl-en">Invoke</span><span class="pl-kos">(</span><span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-s1">as</span> <span class="pl-v">T</span><span class="pl-kos">;</span>
+                        <span class="pl-c">//还有一种方法也可以实现私有构造函数实例化对象</span>
+                        <span class="pl-c">//instance = Activator.CreateInstance(typeof(T), true) as T;</span>
+                        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">info</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-v">Debug</span><span class="pl-kos">.</span><span class="pl-en">LogError</span><span class="pl-kos">(</span><span class="pl-s">"没有对应的无参构造函数"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+            <span class="pl-k">return</span> <span class="pl-s1">instance</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>补充： 以上均为 懒汉单例模式</h3>
+<h3>补充 ：饿汉单例模式 就算 属性直接=》instance</h3>
+<h3>补充 ：区别：</h3>
+<p>懒字体现在：这种单例模式只会在第一次使用时才创建事例，而不是应用程序启动时就创建。一种“敌不动我不动”，“催一下动一下”的感觉<br>
+它的好处也在于此，因为只有当我们代码中需要用到某个单例模式对象时才会去实例化分配内存。<br>
+在商业项目中，游戏系统是非常多的，内存开销也是较大的，懒汉模式的延迟实例化特点可以帮助我们在一定程度上缓解一丁点的内存压力。</p>
+<p>饿字的体现在：这种单例模式在应用程序启动时就创建事例，无论是否使用该事例。相当于不管我“吃不吃”，我就要创建它，先放在那，一种“饥不择食”的感觉。<br>
+虽然看起来“饿汉”没有“懒汉”那么好，但实际上，“饿汉”最大的优点就是“懒汉”的缺点，因为“饿汉”不用在实例化时考虑线程安全问题，它具有天生的线程安全。而“懒汉”在我们之前讲解的课程当中，大家已经感受到了，我们需要考虑多线程的并发访问问题。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 16 Apr 2024 04:53:10 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>GameFrame.单例模式基类</title><link>https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</link><description>### 单例模式基类&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 16 Apr 2024 05:41:11 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>GameFrame.单例模式基类</title><link>https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</link><description>### 单例模式基类&#13;
 &#13;
 ### 不继承Mono的单例模式基类&#13;
 ```js&#13;
@@ -124,7 +124,26 @@ public abstract class BaseManagerPro&lt;T&gt; where T : class&#13;
     }&#13;
 }&#13;
 &#13;
-```。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</guid><pubDate>Tue, 16 Apr 2024 04:41:37 +0000</pubDate></item><item><title>UI.Demo.面板管理类</title><link>https://natsunokoide.github.io//post/UI.Demo.-mian-ban-guan-li-lei.html</link><description>### UI.Demo.面板管理类&#13;
+```&#13;
+&#13;
+### 安全性优化后的无Mono单例模式基类 （加锁的版本）&#13;
+```js&#13;
+using System;&#13;
+using System.Collections;&#13;
+using System.Collections.Generic;&#13;
+using System.Reflection;&#13;
+using UnityEngine;&#13;
+&#13;
+/// &lt;summary&gt;&#13;
+/// 安全性优化后的无Mono单例模式基类&#13;
+/// 1.class 前加 abstract 防止基类在其他地方被new&#13;
+/// 2.利用反射的方式获取子类T中的构造函数信息，使用无参构造实例化instance&#13;
+/// &lt;/summary&gt;&#13;
+/// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;&#13;
+public abstract class BaseManagerPro&lt;T&gt; where T : class&#13;
+{&#13;
+    private static T instance;&#13;
+    //readonly：这表明一旦 lockObj 在构造函数中或者在声明时被初始化之后，就不能被修改。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</guid><pubDate>Tue, 16 Apr 2024 04:41:37 +0000</pubDate></item><item><title>UI.Demo.面板管理类</title><link>https://natsunokoide.github.io//post/UI.Demo.-mian-ban-guan-li-lei.html</link><description>### UI.Demo.面板管理类&#13;
 &#13;
 ### 内容&#13;
 1. 单例模式&#13;
