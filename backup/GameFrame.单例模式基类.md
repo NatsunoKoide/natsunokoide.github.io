@@ -100,6 +100,9 @@ using UnityEngine;
 public abstract class BaseManagerPro<T> where T : class
 {
     private static T instance;
+    //提供给外部一个bool变量用于判断是否已经存在单例模式
+    //程序员在子类里利用这个bool进行判断即可
+    protected bool InstanceIsNull => instane == null;
     public static T Instance
     {
         get
@@ -110,6 +113,8 @@ public abstract class BaseManagerPro<T> where T : class
                 Type type = typeof(T);
                 ConstructorInfo info = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
                 instance = info?.Invoke(null) as T;
+                //还有一种方法也可以实现私有构造函数实例化对象
+                //instance = Activator.CreateInstance(typeof(T), true) as T;
                 if (info == null) Debug.LogError("没有对应的无参构造函数");
             }
             return instance;

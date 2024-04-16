@@ -156,19 +156,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">public</span> <span class="pl-s1">abstract</span> <span class="pl-k">class</span> <span class="pl-v">BaseManagerPro</span><span class="pl-c1">&lt;</span><span class="pl-v">T</span><span class="pl-c1">&gt;</span> <span class="pl-s1">where</span><span class="pl-kos"></span> T : <span class="pl-k">class</span>
 <span class="pl-kos">{</span>
     <span class="pl-c1">private</span> <span class="pl-k">static</span> <span class="pl-c1">T</span> <span class="pl-c1">instance</span><span class="pl-kos">;</span>
-    <span class="pl-c1">public</span> <span class="pl-k">static</span> <span class="pl-c1">T</span> <span class="pl-v">Instance</span>
+    <span class="pl-c">//提供给外部一个bool变量用于判断是否已经存在单例模式</span>
+    <span class="pl-c">//程序员在子类里利用这个bool进行判断即可</span>
+    <span class="pl-c1">protected</span> <span class="pl-s1">bool</span> <span class="pl-c1">InstanceIsNull</span> <span class="pl-c1">=&gt;</span> <span class="pl-c1">instane</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+    <span class="pl-c1">public</span><span class="pl-kos"></span> <span class="pl-c1">static</span> <span class="pl-c1">T</span> <span class="pl-v">Instance</span>
     <span class="pl-kos">{</span>
         <span class="pl-c1">get</span>
         <span class="pl-kos">{</span>
-            <span class="pl-en">if</span><span class="pl-kos">(</span><span class="pl-s1">instance</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span>
+            <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-c1">instance</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span>
             <span class="pl-kos">{</span>
                 <span class="pl-c">//利用 反射 得到无参私有构造函数 用来对象的实例化</span>
-                <span class="pl-v">Type</span> <span class="pl-s1">type</span> <span class="pl-c1">=</span> <span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">T</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-                <span class="pl-v">ConstructorInfo</span> <span class="pl-s1">info</span> <span class="pl-c1">=</span> <span class="pl-s1">type</span><span class="pl-kos">.</span><span class="pl-en">GetConstructor</span><span class="pl-kos">(</span><span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span> <span class="pl-c1">|</span> <span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">NonPublic</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">,</span> <span class="pl-v">Type</span><span class="pl-kos">.</span><span class="pl-c1">EmptyTypes</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-                <span class="pl-s1">instance</span> <span class="pl-c1">=</span> <span class="pl-s1">info</span><span class="pl-kos">?.</span><span class="pl-en">Invoke</span><span class="pl-kos">(</span><span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-s1">as</span> <span class="pl-v">T</span><span class="pl-kos">;</span>
-                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">info</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-v">Debug</span><span class="pl-kos">.</span><span class="pl-en">LogError</span><span class="pl-kos">(</span><span class="pl-s">"没有对应的无参构造函数"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-c1">Type</span> <span class="pl-s1">type</span> <span class="pl-c1">=</span> <span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-v">T</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-c1">ConstructorInfo</span> <span class="pl-s1">info</span> <span class="pl-c1">=</span> <span class="pl-s1">type</span><span class="pl-kos">.</span><span class="pl-en">GetConstructor</span><span class="pl-kos">(</span><span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span> <span class="pl-c1">|</span> <span class="pl-v">BindingFlags</span><span class="pl-kos">.</span><span class="pl-c1">NonPublic</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">,</span> <span class="pl-v">Type</span><span class="pl-kos">.</span><span class="pl-c1">EmptyTypes</span><span class="pl-kos">,</span> <span class="pl-c1">null</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-c1">instance</span> <span class="pl-c1">=</span> <span class="pl-s1">info</span><span class="pl-kos">?.</span><span class="pl-en">Invoke</span><span class="pl-kos">(</span><span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-s1">as</span> <span class="pl-v">T</span><span class="pl-kos">;</span>
+                <span class="pl-c">//还有一种方法也可以实现私有构造函数实例化对象</span>
+                <span class="pl-c">//instance = Activator.CreateInstance(typeof(T), true) as T;</span>
+                <span class="pl-c1">if</span> <span class="pl-kos">(</span><span class="pl-s1">info</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span><span class="pl-kos">)</span> <span class="pl-v">Debug</span><span class="pl-kos">.</span><span class="pl-v">LogError</span><span class="pl-kos">(</span><span class="pl-s">"没有对应的无参构造函数"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             <span class="pl-kos">}</span>
-            <span class="pl-c1">return</span><span class="pl-kos"></span> <span class="pl-c1">instance</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-s1">instance</span><span class="pl-kos">;</span>
         <span class="pl-kos">}</span>
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div></div>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 16 Apr 2024 04:42:18 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>GameFrame.单例模式基类</title><link>https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</link><description>### 单例模式基类&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 16 Apr 2024 04:53:10 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>GameFrame.单例模式基类</title><link>https://natsunokoide.github.io//post/GameFrame.-dan-li-mo-shi-ji-lei.html</link><description>### 单例模式基类&#13;
 &#13;
 ### 不继承Mono的单例模式基类&#13;
 ```js&#13;
@@ -102,6 +102,9 @@ using UnityEngine;&#13;
 public abstract class BaseManagerPro&lt;T&gt; where T : class&#13;
 {&#13;
     private static T instance;&#13;
+    //提供给外部一个bool变量用于判断是否已经存在单例模式&#13;
+    //程序员在子类里利用这个bool进行判断即可&#13;
+    protected bool InstanceIsNull =&gt; instane == null;&#13;
     public static T Instance&#13;
     {&#13;
         get&#13;
@@ -112,6 +115,8 @@ public abstract class BaseManagerPro&lt;T&gt; where T : class&#13;
                 Type type = typeof(T);&#13;
                 ConstructorInfo info = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Type.EmptyTypes, null);&#13;
                 instance = info?.Invoke(null) as T;&#13;
+                //还有一种方法也可以实现私有构造函数实例化对象&#13;
+                //instance = Activator.CreateInstance(typeof(T), true) as T;&#13;
                 if (info == null) Debug.LogError("没有对应的无参构造函数");&#13;
             }&#13;
             return instance;&#13;
