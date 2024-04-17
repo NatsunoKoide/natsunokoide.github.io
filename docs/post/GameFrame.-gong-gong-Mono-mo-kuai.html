@@ -131,6 +131,66 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-kos">{</span>
         <span class="pl-s1">lateUpdateEvent</span><span class="pl-kos">?.</span><span class="pl-en">Invoke</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>测试脚本</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-c">//没有继承mono，测试利用monomgr实现无mono的子脚本更新帧</span>
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Test6Mgr : <span class="pl-v">BaseManager</span><span class="pl-c1">&lt;</span><span class="pl-v">Test6Mgr</span><span class="pl-c1">&gt;</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">//定义一个协程用于协程赋值</span>
+    <span class="pl-s1">private</span> <span class="pl-v">Coroutine</span> <span class="pl-s1">testFun</span><span class="pl-kos">;</span>
+
+    <span class="pl-s1">public</span> <span class="pl-s1">void</span> <span class="pl-en">IcanUpdate</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">MonoMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">AddUpdateListener</span><span class="pl-kos">(</span><span class="pl-v">MyUpdate</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">testFun</span> <span class="pl-c1">=</span> <span class="pl-v">MonoMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">StartCoroutine</span><span class="pl-kos">(</span><span class="pl-v">Test</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">public</span> <span class="pl-k">void</span> <span class="pl-en">IcanStopUpdate</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">MonoMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">RemoveUpdateListener</span><span class="pl-kos">(</span><span class="pl-v">MyUpdate</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-v">MonoMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">StopCoroutine</span><span class="pl-kos">(</span><span class="pl-s1">testFun</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">private</span> <span class="pl-v">IEnumerator</span> <span class="pl-en">Test</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">yield</span> <span class="pl-s1">return</span> <span class="pl-k">new</span> <span class="pl-v">WaitForSeconds</span><span class="pl-kos">(</span><span class="pl-c1">3</span><span class="pl-s1">f</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-v">Debug</span><span class="pl-kos">.</span><span class="pl-en">Log</span><span class="pl-kos">(</span><span class="pl-s">"TestTeat"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">private</span> <span class="pl-k">void</span> <span class="pl-en">MyUpdate</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">Debug</span><span class="pl-kos">.</span><span class="pl-en">Log</span><span class="pl-kos">(</span><span class="pl-s">"1231312"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>main函数</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> Main : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">private</span> <span class="pl-k">void</span> <span class="pl-v">Start</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+    <span class="pl-kos">}</span>
+
+
+    <span class="pl-c">// Update is called once per frame</span>
+    <span class="pl-k">void</span> <span class="pl-v">Update</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetKeyDown</span><span class="pl-kos">(</span><span class="pl-v">KeyCode</span><span class="pl-kos">.</span><span class="pl-c1">Space</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+            <span class="pl-v">Test6Mgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">IcanUpdate</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Input</span><span class="pl-kos">.</span><span class="pl-en">GetKeyUp</span><span class="pl-kos">(</span><span class="pl-v">KeyCode</span><span class="pl-kos">.</span><span class="pl-c1">Space</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+            <span class="pl-v">Test6Mgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">IcanStopUpdate</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

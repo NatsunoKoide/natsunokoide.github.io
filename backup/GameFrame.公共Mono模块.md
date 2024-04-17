@@ -67,3 +67,65 @@ public class MonoMgr : SingleAutoMono<MonoMgr>
 }
 
 ```
+
+> 测试脚本
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+//没有继承mono，测试利用monomgr实现无mono的子脚本更新帧
+public class Test6Mgr : BaseManager<Test6Mgr>
+{
+    //定义一个协程用于协程赋值
+    private Coroutine testFun;
+
+    public void IcanUpdate()
+    {
+        MonoMgr.Instance.AddUpdateListener(MyUpdate);
+        testFun = MonoMgr.Instance.StartCoroutine(Test());
+    }
+
+    public void IcanStopUpdate()
+    {
+        MonoMgr.Instance.RemoveUpdateListener(MyUpdate);
+        MonoMgr.Instance.StopCoroutine(testFun);
+    }
+
+    private IEnumerator Test()
+    {
+        yield return new WaitForSeconds(3f);
+        Debug.Log("TestTeat");
+    }
+
+    private void MyUpdate()
+    {
+        Debug.Log("1231312");
+    }
+}
+```
+
+> main函数
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Main : MonoBehaviour
+{
+    private void Start()
+    {
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            Test6Mgr.Instance.IcanUpdate();
+
+        if (Input.GetKeyUp(KeyCode.Space))
+            Test6Mgr.Instance.IcanStopUpdate();
+    }
+}
+```
