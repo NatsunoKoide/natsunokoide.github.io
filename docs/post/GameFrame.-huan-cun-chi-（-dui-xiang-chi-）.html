@@ -11,7 +11,7 @@
     </script>
 <meta name="description" content="GameFrame.缓存池（对象池）">
 <title>GameFrame.缓存池（对象池）</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -69,7 +69,98 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3>作用</h3>
 <p><strong>缓存池（对象池）的主要作用是优化资源管理，提高程序性能。<br>
 主要通过重复利用已经创建的对象，避免频繁的创建和销毁过程，<br>
-从而减少系统的内存分配和垃圾回收带来的开销。</strong></p></div>
+从而减少系统的内存分配和垃圾回收带来的开销。</strong></p>
+<h3>缓存池的基本实现</h3>
+<blockquote>
+<p>缓存池管理器</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-c">/// &lt;summary&gt;</span>
+<span class="pl-c">/// 缓存池模块 管理器</span>
+<span class="pl-c">/// &lt;/summary&gt;</span>
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> PoolMgr : <span class="pl-v">BaseManager</span><span class="pl-c1">&lt;</span><span class="pl-v">PoolMgr</span><span class="pl-c1">&gt;</span> <span class="pl-c">//BaseManager&lt;PoolMgr&gt;继承 不继承mono的单例管理器</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">//柜子容器放抽屉</span>
+    private <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> Stack<span class="pl-kos"></span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">poolDic</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> <span class="pl-v">Stack</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">public</span> <span class="pl-v">GameObject</span> <span class="pl-v">GetObj</span><span class="pl-kos">(</span><span class="pl-s1">string</span> <span class="pl-s1">name</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+        <span class="pl-c">//有抽屉 并且 抽屉里有对象</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">ContainsKey</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">Count</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">Pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//激活对象 再返回</span>
+            <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">SetActive</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-c">//否则去创建</span>
+        <span class="pl-k">else</span> 
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-v">GameObject</span><span class="pl-kos">.</span><span class="pl-en">Instantiate</span><span class="pl-kos">(</span><span class="pl-v">Resources</span><span class="pl-kos">.</span><span class="pl-c1">Load</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 往缓存池放入对象</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="name"&gt;抽屉名字&lt;/param&gt;</span>
+    <span class="pl-c">/// &lt;param name="obj"&gt;放入的对象&lt;/param&gt;</span>
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">PushObj</span><span class="pl-kos">(</span><span class="pl-s1">string</span> <span class="pl-s1">name</span><span class="pl-kos">,</span><span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//不直接移除对象 而是将对象失活 用的时候再激活</span>
+        <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">SetActive</span><span class="pl-kos">(</span><span class="pl-c1">false</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//没有抽屉 创建抽屉</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">ContainsKey</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">,</span> <span class="pl-k">new</span> <span class="pl-v">Stack</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">Push</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        #<span class="pl-s1">region</span><span class="pl-kos"></span> <span class="pl-s1">pushobj基础逻辑</span>
+        <span class="pl-c">/*//如果存储对应的抽屉 直接放入</span>
+<span class="pl-c">        if (poolDic.ContainsKey(name))</span>
+<span class="pl-c">        {</span>
+<span class="pl-c">            poolDic[name].Push(obj);</span>
+<span class="pl-c">        }</span>
+<span class="pl-c">        //没找到抽屉 创建一个出来 再放</span>
+<span class="pl-c">        else</span>
+<span class="pl-c">        {</span>
+<span class="pl-c">            poolDic.Add(name, new Stack&lt;GameObject&gt;());</span>
+<span class="pl-c">            poolDic[name].Push(obj);</span>
+<span class="pl-c">        }*/</span>
+        #<span class="pl-s1">endregion</span>
+
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">ClearPool</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">Clear</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<blockquote>
+<p>对象销毁脚本（挂载在预设体上）（使用缓存池”销毁“）</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> DelayRemove : <span class="pl-v">MonoBehaviour</span>
+<span class="pl-kos">{</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">string</span> <span class="pl-s1">poolName</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">// Start is called before the first frame update</span>
+    <span class="pl-c">//当对象激活的时候执行的生命周期函数</span>
+    <span class="pl-s1">private</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">OnEnable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//延时函数</span>
+        <span class="pl-v">Invoke</span><span class="pl-kos">(</span><span class="pl-s">"RemoveMe"</span><span class="pl-kos">,</span> <span class="pl-c1">1</span><span class="pl-s1">f</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-s1">private</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">RemoveMe</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">PoolMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">PushObj</span><span class="pl-kos">(</span><span class="pl-s1">poolName</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">gameObject</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
