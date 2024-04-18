@@ -160,6 +160,246 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-kos">{</span>
         <span class="pl-v">PoolMgr</span><span class="pl-kos">.</span><span class="pl-c1">Instance</span><span class="pl-kos">.</span><span class="pl-en">PushObj</span><span class="pl-kos">(</span><span class="pl-s1">poolName</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">gameObject</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>进行窗口布局优化 + 对象上限优化</h3>
+<blockquote>
+<p>代码</p>
+</blockquote>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">;</span>
+<span class="pl-s1">using</span> <span class="pl-v">UnityEngine</span><span class="pl-kos">;</span>
+
+<span class="pl-c">/// &lt;summary&gt;</span>
+<span class="pl-c">/// 抽屉（池子中的数据）对象</span>
+<span class="pl-c">/// &lt;/summary&gt;</span>
+<span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">class</span> <span class="pl-v">PoolData</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">//用来存储抽屉中的对象 记录的是没有使用的对象</span>
+    <span class="pl-c1">private</span> <span class="pl-v">Stack</span><span class="pl-c1">&lt;</span><span class="pl-c1">GameObject</span><span class="pl-c1">&gt;</span> <span class="pl-c1">dataStack</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Stack</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">//用来记录使用中的对象的 </span>
+    <span class="pl-c1">private</span> <span class="pl-v">List</span><span class="pl-c1">&lt;</span><span class="pl-c1">GameObject</span><span class="pl-c1">&gt;</span> <span class="pl-c1">usedList</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">List</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+
+    <span class="pl-c">//抽屉根对象 用来进行布局管理的对象</span>
+    <span class="pl-c1">private</span> <span class="pl-v">GameObject</span> <span class="pl-c1">rootObj</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">//获取容器中是否有对象</span>
+    <span class="pl-c1">public</span> <span class="pl-s1">int</span> <span class="pl-v">Count</span> <span class="pl-c1">=&gt;</span> <span class="pl-c1">dataStack</span><span class="pl-kos">.</span><span class="pl-c1">Count</span><span class="pl-kos">;</span>
+
+    <span class="pl-c1">public</span> <span class="pl-s1">int</span> <span class="pl-c1">UsedCount</span> <span class="pl-c1">=&gt;</span> <span class="pl-c1">usedList</span><span class="pl-kos">.</span><span class="pl-c1">Count</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 初始化构造函数</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="root"&gt;柜子（缓存池）父对象&lt;/param&gt;</span>
+    <span class="pl-c">/// &lt;param name="name"&gt;抽屉父对象的名字&lt;/param&gt;</span>
+    <span class="pl-en">public</span> <span class="pl-v">PoolData</span><span class="pl-kos">(</span><span class="pl-v">GameObject</span> <span class="pl-s1">root</span><span class="pl-kos">,</span> <span class="pl-s1">string</span> <span class="pl-s1">name</span><span class="pl-kos">,</span> <span class="pl-v">GameObject</span> <span class="pl-s1">usedObj</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//开启功能时 才会动态创建 建立父子关系</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">PoolMgr</span><span class="pl-kos">.</span><span class="pl-c1">isOpenLayout</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//创建抽屉父对象</span>
+            <span class="pl-s1">rootObj</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">GameObject</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//和柜子父对象建立父子关系</span>
+            <span class="pl-s1">rootObj</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-en">SetParent</span><span class="pl-kos">(</span><span class="pl-s1">root</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        <span class="pl-c">//创建抽屉时 外部肯定是会动态创建一个对象的</span>
+        <span class="pl-c">//我们应该将其记录到 使用中的对象容器中</span>
+        <span class="pl-v">PushUsedList</span><span class="pl-kos">(</span><span class="pl-s1">usedObj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 从抽屉中弹出数据对象</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;returns&gt;想要的对象数据&lt;/returns&gt;</span>
+    <span class="pl-en">public</span> <span class="pl-v">GameObject</span> <span class="pl-v">Pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//取出对象</span>
+        <span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Count</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//从没有的容器当中取出使用</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-s1">dataStack</span><span class="pl-kos">.</span><span class="pl-en">Pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//现在要使用了 应该要用使用中的容器记录它</span>
+            <span class="pl-s1">usedList</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">else</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//取0索引的对象 代表的就是使用时间最长的对象</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-s1">usedList</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-c">//并且把它从使用着的对象中移除</span>
+            <span class="pl-s1">usedList</span><span class="pl-kos">.</span><span class="pl-en">RemoveAt</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//由于它还要拿出去用，所以我们应该把它又记录到 使用中的容器中去 </span>
+            <span class="pl-c">//并且添加到尾部 表示 比较新的开始</span>
+            <span class="pl-s1">usedList</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        <span class="pl-c">//激活对象</span>
+        <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">SetActive</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//断开父子关系</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">PoolMgr</span><span class="pl-kos">.</span><span class="pl-c1">isOpenLayout</span><span class="pl-kos">)</span>
+            <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-en">SetParent</span><span class="pl-kos">(</span><span class="pl-c1">null</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-k">return</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 将物体放入到抽屉对象中</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="obj"&gt;&lt;/param&gt;</span>
+    <span class="pl-en">public</span> <span class="pl-s1">void</span> <span class="pl-v">Push</span><span class="pl-kos">(</span><span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-c">//失活放入抽屉的对象</span>
+        <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">SetActive</span><span class="pl-kos">(</span><span class="pl-c1">false</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//放入对应抽屉的根物体中 建立父子关系</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">PoolMgr</span><span class="pl-kos">.</span><span class="pl-c1">isOpenLayout</span><span class="pl-kos">)</span>
+            <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">.</span><span class="pl-en">SetParent</span><span class="pl-kos">(</span><span class="pl-s1">rootObj</span><span class="pl-kos">.</span><span class="pl-c1">transform</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//通过栈记录对应的对象数据</span>
+        <span class="pl-s1">dataStack</span><span class="pl-kos">.</span><span class="pl-en">Push</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-c">//这个对象已经不再使用了 应该把它从记录容器中移除</span>
+        <span class="pl-s1">usedList</span><span class="pl-kos">.</span><span class="pl-en">Remove</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 将对象压入到使用中的容器中记录</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="obj"&gt;&lt;/param&gt;</span>
+    <span class="pl-c1">public</span> <span class="pl-s1">void</span> <span class="pl-en">PushUsedList</span><span class="pl-kos">(</span><span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">usedList</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">/// &lt;summary&gt;</span>
+<span class="pl-c">/// 缓存池(对象池)模块 管理器</span>
+<span class="pl-c">/// &lt;/summary&gt;</span>
+<span class="pl-s1">public</span> <span class="pl-s1">class</span> PoolMgr : <span class="pl-v">BaseManager</span><span class="pl-c1">&lt;</span><span class="pl-v">PoolMgr</span><span class="pl-c1">&gt;</span>
+<span class="pl-kos">{</span>
+    <span class="pl-c">//柜子容器当中有抽屉的体现</span>
+    <span class="pl-c">//值 其实代表的就是一个 抽屉对象</span>
+    private <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> PoolData<span class="pl-kos"></span><span class="pl-c1">&gt;</span> <span class="pl-s1">poolDic</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Dictionary</span><span class="pl-c1">&lt;</span><span class="pl-s1">string</span><span class="pl-kos">,</span> <span class="pl-v">PoolData</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">//池子根对象</span>
+    <span class="pl-s1">private</span> <span class="pl-v">GameObject</span> <span class="pl-s1">poolObj</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">//是否开启布局功能</span>
+    <span class="pl-s1">public</span> <span class="pl-s1">static</span> <span class="pl-s1">bool</span> <span class="pl-s1">isOpenLayout</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 拿东西的方法</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="name"&gt;抽屉容器的名字&lt;/param&gt;</span>
+    <span class="pl-c">/// &lt;returns&gt;从缓存池中取出的对象&lt;/returns&gt;</span>
+    <span class="pl-s1">public</span> <span class="pl-v">GameObject</span> <span class="pl-v">GetObj</span><span class="pl-kos">(</span><span class="pl-s1">string</span> <span class="pl-s1">name</span><span class="pl-kos">,</span> <span class="pl-s1">int</span> <span class="pl-s1">maxNum</span> <span class="pl-c1">=</span> <span class="pl-c1">50</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">//如果根物体为空 就创建</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">poolObj</span> <span class="pl-c1">==</span> <span class="pl-c1">null</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">isOpenLayout</span><span class="pl-kos">)</span>
+            <span class="pl-s1">poolObj</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">GameObject</span><span class="pl-kos">(</span><span class="pl-s">"Pool"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        #<span class="pl-s1">region</span> <span class="pl-s1">加入了数量上限后的逻辑判断</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">ContainsKey</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span> <span class="pl-c1">||</span>
+            <span class="pl-kos">(</span><span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">Count</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">UsedCount</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">maxNum</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-c">//动态创建对象</span>
+            <span class="pl-c">//没有的时候 通过资源加载 去实例化出一个GameObject</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-v">GameObject</span><span class="pl-kos">.</span><span class="pl-en">Instantiate</span><span class="pl-kos">(</span><span class="pl-v">Resources</span><span class="pl-kos">.</span><span class="pl-c1">Load</span><span class="pl-c1">&lt;</span><span class="pl-v">GameObject</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">//避免实例化出来的对象 默认会在名字后面加一个(Clone)</span>
+            <span class="pl-c">//我们重命名过后 方便往里面放</span>
+            <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">name</span> <span class="pl-c1">=</span> <span class="pl-s1">name</span><span class="pl-kos">;</span>
+
+            <span class="pl-c">//创建抽屉</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">ContainsKey</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+                <span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">Add</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">,</span> <span class="pl-k">new</span> <span class="pl-v">PoolData</span><span class="pl-kos">(</span><span class="pl-s1">poolObj</span><span class="pl-kos">,</span> <span class="pl-s1">name</span><span class="pl-kos">,</span> <span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">else</span><span class="pl-c">//实例化出来的对象 需要记录到使用中的对象容器中</span>
+                <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">PushUsedList</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-c">//当抽屉中有对象 或者 使用中的对象超上限了 直接去取出来用</span>
+        <span class="pl-k">else</span>
+        <span class="pl-kos">{</span>
+            <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">Pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+
+        #<span class="pl-s1">endregion</span>
+
+
+        #<span class="pl-s1">region</span> <span class="pl-s1">没有加入</span> <span class="pl-s1">上限时的逻辑</span>
+        <span class="pl-c">////有抽屉 并且 抽屉里 有对象 才去直接拿</span>
+        <span class="pl-c">//if (poolDic.ContainsKey(name) &amp;&amp; poolDic[name].Count &gt; 0)</span>
+        <span class="pl-c">//{</span>
+        <span class="pl-c">//    //弹出栈中的对象 直接返回给外部使用</span>
+        <span class="pl-c">//    obj = poolDic[name].Pop();</span>
+        <span class="pl-c">//}</span>
+        <span class="pl-c">////否则，就应该去创造</span>
+        <span class="pl-c">//else</span>
+        <span class="pl-c">//{</span>
+        <span class="pl-c">//    //没有的时候 通过资源加载 去实例化出一个GameObject</span>
+        <span class="pl-c">//    obj = GameObject.Instantiate(Resources.Load&lt;GameObject&gt;(name));</span>
+        <span class="pl-c">//    //避免实例化出来的对象 默认会在名字后面加一个(Clone)</span>
+        <span class="pl-c">//    //我们重命名过后 方便往里面放</span>
+        <span class="pl-c">//    obj.name = name;</span>
+        <span class="pl-c">//}</span>
+        #<span class="pl-s1">endregion</span>
+        <span class="pl-k">return</span> <span class="pl-s1">obj</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 往缓存池中放入对象</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-c">/// &lt;param name="name"&gt;抽屉（对象）的名字&lt;/param&gt;</span>
+    <span class="pl-c">/// &lt;param name="obj"&gt;希望放入的对象&lt;/param&gt;</span>
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">PushObj</span><span class="pl-kos">(</span><span class="pl-v">GameObject</span> <span class="pl-s1">obj</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+       
+
+        #<span class="pl-s1">region</span> <span class="pl-s1">因为失活</span> <span class="pl-s1">父子关系都放入了</span> <span class="pl-s1">抽屉对象中处理</span> <span class="pl-s1">所以不需要再处理这些内容了</span>
+        <span class="pl-c">////总之，目的就是要把对象隐藏起来</span>
+        <span class="pl-c">////并不是直接移除对象 而是将对象失活 一会儿再用 用的时候再激活它</span>
+        <span class="pl-c">////除了这种方式，还可以把对象放倒屏幕外看不见的地方</span>
+        <span class="pl-c">//obj.SetActive(false);</span>
+
+        <span class="pl-c">////把失活的对象（要放入抽屉中的对象） 父对象先设置为 柜子（缓存池）根对象</span>
+        <span class="pl-c">//obj.transform.SetParent(poolObj.transform);</span>
+        #<span class="pl-s1">endregion</span>
+
+        <span class="pl-c">//没有抽屉 创建抽屉</span>
+        <span class="pl-c">//if (!poolDic.ContainsKey(obj.name))</span>
+        <span class="pl-c">//    poolDic.Add(obj.name, new PoolData(poolObj, obj.name));</span>
+
+        <span class="pl-c">//往抽屉当中放对象</span>
+        <span class="pl-s1">poolDic</span><span class="pl-kos">[</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">Push</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-c">////如果存在对应的抽屉容器 直接放</span>
+        <span class="pl-c">//if(poolDic.ContainsKey(name))</span>
+        <span class="pl-c">//{</span>
+        <span class="pl-c">//    //往栈（抽屉）中放入对象</span>
+        <span class="pl-c">//    poolDic[name].Push(obj);</span>
+        <span class="pl-c">//}</span>
+        <span class="pl-c">////否则 需要先创建抽屉 再放</span>
+        <span class="pl-c">//else</span>
+        <span class="pl-c">//{</span>
+        <span class="pl-c">//    //先创建抽屉</span>
+        <span class="pl-c">//    poolDic.Add(name, new Stack&lt;GameObject&gt;());</span>
+        <span class="pl-c">//    //再往抽屉里面放</span>
+        <span class="pl-c">//    poolDic[name].Push(obj);</span>
+        <span class="pl-c">//}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">/// &lt;summary&gt;</span>
+    <span class="pl-c">/// 用于清除整个柜子当中的数据 </span>
+    <span class="pl-c">/// 使用场景 主要是 切场景时</span>
+    <span class="pl-c">/// &lt;/summary&gt;</span>
+    <span class="pl-s1">public</span><span class="pl-kos"></span> <span class="pl-k">void</span> <span class="pl-v">ClearPool</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-s1">poolDic</span><span class="pl-kos">.</span><span class="pl-en">Clear</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">poolObj</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
