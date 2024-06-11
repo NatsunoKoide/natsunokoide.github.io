@@ -5,14 +5,324 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
-    <link rel="icon" href="http://meekdai.com/favicon.ico">
-    <script>
-        if(localStorage.getItem("meek_theme")==null){}
-        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
-        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    <link rel="icon" href="http://meekdai.com/favicon.ico"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-    
-<meta name="description" content="Unity.物理系统_范围检测">
+<meta name="description" content="### 物理系统_范围检测
+
+> 代码总结
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+//重要知识点：
+//关于层级
+//通过名字得到层级编号 LayerMask.NameToLayer
+//我们需要通过编号左移构建二进制数
+//这样每一个编号的层级 都是 对应位为1的2进制数
+//我们通过 位运算 可以选择想要检测层级
+//好处 一个int 就可以表示所有想要检测的层级信息
+
+//层级编号是 0~31 刚好32位
+//是一个int数
+//每一个编号 代表的 都是二进制的一位
+//0—— 1 << 0——0000 0000 0000 0000 0000 0000 0000 0001 = 1
+//1—— 1 << 1——0000 0000 0000 0000 0000 0000 0000 0010 = 2
+//2—— 1 << 2——0000 0000 0000 0000 0000 0000 0000 0100 = 4
+//3—— 1 << 3——0000 0000 0000 0000 0000 0000 0000 1000 = 8
+//4—— 1 << 4——0000 0000 0000 0000 0000 0000 0001 0000 = 16
+//5—— 1 << 5——0000 0000 0000 0000 0000 0000 0010 0000 = 32
+
+public class Lesson22 : MonoBehaviour
+{
+    void Start()
+    {
+        #region 知识点一 什么是范围检测
+        //游戏中瞬时的攻击范围判断一般会使用范围检测
+        //简而言之在指定位置 进行 范围判断 我们可以得到处于指定范围内的 对象 目的是对 对象进行处理比如 受伤 减血等等
+        #endregion
+
+        #region 知识点二 如何进行范围检测
+        //必备条件：想要被范围检测到的对象 必须具备碰撞器
+        //注意点：
+        //1.范围检测相关API 只有当执行该句代码时 进行一次范围检测 它是瞬时的
+        //2.范围检测相关API 并不会真正产生一个碰撞器 只是碰撞判断计算而已
+
+        //范围检测API
+        //1.盒状范围检测
+        //参数一：立方体中心点
+        //参数二：立方体三边大小
+        //参数三：立方体角度
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        print(LayerMask.NameToLayer('UI'));
+        Collider[] colliders = Physics.OverlapBox(Vector3.zero, Vector3.one, Quaternion.AngleAxis(45, Vector3.up),
+                            1 << LayerMask.NameToLayer('UI') |
+                            1 << LayerMask.NameToLayer('Default'), QueryTriggerInteraction.UseGlobal);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            print(colliders[i].gameObject.name);
+        }
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapBoxNonAlloc()
+        if (Physics.OverlapBoxNonAlloc(Vector3.zero, Vector3.one, colliders) != 0) { };
+
+        //2.球形范围检测
+        //参数一：中心点
+        //参数二：球半径
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        colliders = Physics.OverlapSphere(Vector3.zero, 5, 1 << LayerMask.NameToLayer('Default'));
+
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapSphereNonAlloc
+        if (Physics.OverlapSphereNonAlloc(Vector3.zero, 5, colliders) != 0) { };
+
+        //3.胶囊范围检测
+        //参数一：半圆一中心点
+        //参数二：半圆二中心点
+        //参数三：半圆半径
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        colliders = Physics.OverlapCapsule(Vector3.zero, Vector3.up, 1, 1 << LayerMask.NameToLayer('UI'), QueryTriggerInteraction.UseGlobal);
+
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapCapsuleNonAlloc
+        if (Physics.OverlapCapsuleNonAlloc(Vector3.zero, Vector3.up, 1, colliders) != 0) { };
+        #endregion
+    }
+}
+```
+
+### 写一个cube wasd移动转向+jkl检测物体
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson22_exercises : MonoBehaviour
+{
+    public float moveSpeed = 10;
+    public float roundSpeed = 20;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Input.GetAxis('Horizontal'); //控制左右
+        //Input.GetAxis('vertical'); //控制前后
+        //位移
+        this.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed * Input.GetAxis('Vertical'));
+        //旋转
+        this.transform.Rotate(Vector3.up, Input.GetAxis('Horizontal') * roundSpeed * Time.deltaTime);
+
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+            //Vector3.one 创建的是长宽高的一半
+            //Quaternion.identity 单位四元数 用于占位 本质是0，0，0
+            //this.transform.rotation作为第三个参数这样可以让碰撞体和物体一起转动
+            Collider[] colliders = Physics.OverlapBox(this.transform.position + this.transform.forward, Vector3.one * 0.5f,
+                                                      this.transform.rotation,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+        else if(Input.GetKeyDown(KeyCode.K))
+        {
+            Collider[] colliders = Physics.OverlapCapsule(this.transform.position,this.transform.position + this.transform.forward * 5,
+                                                          0.5f,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position,10,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+    }
+}
+
+```。">
+<meta property="og:title" content="Unity.物理系统_范围检测">
+<meta property="og:description" content="### 物理系统_范围检测
+
+> 代码总结
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+//重要知识点：
+//关于层级
+//通过名字得到层级编号 LayerMask.NameToLayer
+//我们需要通过编号左移构建二进制数
+//这样每一个编号的层级 都是 对应位为1的2进制数
+//我们通过 位运算 可以选择想要检测层级
+//好处 一个int 就可以表示所有想要检测的层级信息
+
+//层级编号是 0~31 刚好32位
+//是一个int数
+//每一个编号 代表的 都是二进制的一位
+//0—— 1 << 0——0000 0000 0000 0000 0000 0000 0000 0001 = 1
+//1—— 1 << 1——0000 0000 0000 0000 0000 0000 0000 0010 = 2
+//2—— 1 << 2——0000 0000 0000 0000 0000 0000 0000 0100 = 4
+//3—— 1 << 3——0000 0000 0000 0000 0000 0000 0000 1000 = 8
+//4—— 1 << 4——0000 0000 0000 0000 0000 0000 0001 0000 = 16
+//5—— 1 << 5——0000 0000 0000 0000 0000 0000 0010 0000 = 32
+
+public class Lesson22 : MonoBehaviour
+{
+    void Start()
+    {
+        #region 知识点一 什么是范围检测
+        //游戏中瞬时的攻击范围判断一般会使用范围检测
+        //简而言之在指定位置 进行 范围判断 我们可以得到处于指定范围内的 对象 目的是对 对象进行处理比如 受伤 减血等等
+        #endregion
+
+        #region 知识点二 如何进行范围检测
+        //必备条件：想要被范围检测到的对象 必须具备碰撞器
+        //注意点：
+        //1.范围检测相关API 只有当执行该句代码时 进行一次范围检测 它是瞬时的
+        //2.范围检测相关API 并不会真正产生一个碰撞器 只是碰撞判断计算而已
+
+        //范围检测API
+        //1.盒状范围检测
+        //参数一：立方体中心点
+        //参数二：立方体三边大小
+        //参数三：立方体角度
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        print(LayerMask.NameToLayer('UI'));
+        Collider[] colliders = Physics.OverlapBox(Vector3.zero, Vector3.one, Quaternion.AngleAxis(45, Vector3.up),
+                            1 << LayerMask.NameToLayer('UI') |
+                            1 << LayerMask.NameToLayer('Default'), QueryTriggerInteraction.UseGlobal);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            print(colliders[i].gameObject.name);
+        }
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapBoxNonAlloc()
+        if (Physics.OverlapBoxNonAlloc(Vector3.zero, Vector3.one, colliders) != 0) { };
+
+        //2.球形范围检测
+        //参数一：中心点
+        //参数二：球半径
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        colliders = Physics.OverlapSphere(Vector3.zero, 5, 1 << LayerMask.NameToLayer('Default'));
+
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapSphereNonAlloc
+        if (Physics.OverlapSphereNonAlloc(Vector3.zero, 5, colliders) != 0) { };
+
+        //3.胶囊范围检测
+        //参数一：半圆一中心点
+        //参数二：半圆二中心点
+        //参数三：半圆半径
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：在该范围内的触发器（得到了对象触发器就可以得到对象的所有信息）
+        colliders = Physics.OverlapCapsule(Vector3.zero, Vector3.up, 1, 1 << LayerMask.NameToLayer('UI'), QueryTriggerInteraction.UseGlobal);
+
+        //另一个API 
+        //返回值：碰撞到的碰撞器数量
+        //参数：传入一个数组进行存储
+        //Physics.OverlapCapsuleNonAlloc
+        if (Physics.OverlapCapsuleNonAlloc(Vector3.zero, Vector3.up, 1, colliders) != 0) { };
+        #endregion
+    }
+}
+```
+
+### 写一个cube wasd移动转向+jkl检测物体
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson22_exercises : MonoBehaviour
+{
+    public float moveSpeed = 10;
+    public float roundSpeed = 20;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Input.GetAxis('Horizontal'); //控制左右
+        //Input.GetAxis('vertical'); //控制前后
+        //位移
+        this.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed * Input.GetAxis('Vertical'));
+        //旋转
+        this.transform.Rotate(Vector3.up, Input.GetAxis('Horizontal') * roundSpeed * Time.deltaTime);
+
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+            //Vector3.one 创建的是长宽高的一半
+            //Quaternion.identity 单位四元数 用于占位 本质是0，0，0
+            //this.transform.rotation作为第三个参数这样可以让碰撞体和物体一起转动
+            Collider[] colliders = Physics.OverlapBox(this.transform.position + this.transform.forward, Vector3.one * 0.5f,
+                                                      this.transform.rotation,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+        else if(Input.GetKeyDown(KeyCode.K))
+        {
+            Collider[] colliders = Physics.OverlapCapsule(this.transform.position,this.transform.position + this.transform.forward * 5,
+                                                          0.5f,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position,10,1 << LayerMask.NameToLayer('Monster'));
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                print('物体受伤' + colliders[i].name);
+            }
+        }
+    }
+}
+
+```。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://natsunokoide.github.io//post/Unity.-wu-li-xi-tong-_-fan-wei-jian-ce.html">
+<meta property="og:image" content="https://i.postimg.cc/dtT4J441/image.png">
 <title>Unity.物理系统_范围检测</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
@@ -46,26 +356,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="header">
 <h1 class="postTitle">Unity.物理系统_范围检测</h1>
 <div class="title-right">
-    
-    <a href="https://natsunokoide.github.io/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="https://natsunokoide.github.io/" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd"></path>
         </svg>
-    </button></a>
-
+    </a>
     
-    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/43" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/43" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
-    </button></a>
+    </a>
     
 
-    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
         <svg class="octicon" width="16" height="16" >
             <path id="themeSwitch" fill-rule="evenodd"></path>
         </svg>
-    </button>
+    </a>
 
 </div>
 </div>
@@ -243,41 +551,40 @@ if("02/16/2015"!=""){
 </div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
-if(localStorage.getItem("meek_theme")==null){localStorage.setItem("meek_theme","light");changeLight();}
-else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
-else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
 
-function changeDark(){
-    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
-    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
-    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
-    if(utterancesLoad==1){utterancesTheme("dark-blue");}
-}
-function changeLight(){
-    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
-    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
-    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
-    if(utterancesLoad==1){utterancesTheme("github-light");}
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
 }
 function modeSwitch(){
-    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
-    else{changeLight();localStorage.setItem("meek_theme","light");}
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
 }
 function utterancesTheme(theme){
-    const message = {type: 'set-theme',theme: theme};
-    const iframe = document.getElementsByClassName('utterances-frame')[0];
-    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
 }
-
-console.log("\n %c Gmeek last %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
 </script>
 
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
-
 
 function openComments(){
     cm=document.getElementById("comments");
@@ -291,8 +598,11 @@ function openComments(){
     script.setAttribute("src","https://utteranc.es/client.js");
     script.setAttribute("repo","NatsunoKoide/natsunokoide.github.io");
     script.setAttribute("issue-term","title");
+    
     if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
-    else{script.setAttribute("theme","github-light");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
     script.setAttribute("crossorigin","anonymous");
     script.setAttribute("async","");
     cm.appendChild(script);
@@ -311,9 +621,7 @@ function iFrameLoading(){
         }
     }
 }
-
 </script>
-
 
 
 </html>

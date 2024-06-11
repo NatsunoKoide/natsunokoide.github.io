@@ -10,14 +10,14 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="### 题目
-给定一个 N 叉树，返回其节点值的层序遍历。">
-<meta property="og:title" content="LeetCode 429.N叉树的层序遍历">
+ 给你两棵二叉树，原始树 original 和克隆树 cloned，以及一个位于原始树 original 中的目标节点 target。">
+<meta property="og:title" content="LeetCode1379.找出克隆二叉树中的相同节点">
 <meta property="og:description" content="### 题目
-给定一个 N 叉树，返回其节点值的层序遍历。">
+ 给你两棵二叉树，原始树 original 和克隆树 cloned，以及一个位于原始树 original 中的目标节点 target。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://natsunokoide.github.io//post/LeetCode%20429.N-cha-shu-de-ceng-xu-bian-li.html">
+<meta property="og:url" content="https://natsunokoide.github.io//post/LeetCode1379.-zhao-chu-ke-long-er-cha-shu-zhong-de-xiang-tong-jie-dian.html">
 <meta property="og:image" content="https://i.postimg.cc/dtT4J441/image.png">
-<title>LeetCode 429.N叉树的层序遍历</title>
+<title>LeetCode1379.找出克隆二叉树中的相同节点</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -48,7 +48,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">LeetCode 429.N叉树的层序遍历</h1>
+<h1 class="postTitle">LeetCode1379.找出克隆二叉树中的相同节点</h1>
 <div class="title-right">
     <a href="https://natsunokoide.github.io/" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -56,7 +56,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/82" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/109" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -73,59 +73,42 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>题目</h3>
-<p>给定一个 N 叉树，返回其节点值的层序遍历。（即从左到右，逐层遍历）。<br>
-树的序列化输入是用层序遍历，每组子节点都由 null 值分隔（参见示例）。</p>
+<p>给你两棵二叉树，原始树 original 和克隆树 cloned，以及一个位于原始树 original 中的目标节点 target。<br>
+其中，克隆树 cloned 是原始树 original 的一个 副本 。<br>
+请找出在树 cloned 中，与 target 相同 的节点，并返回对该节点的引用（在 C/C++ 等有指针的语言中返回 节点指针，其他语言返回节点本身）。<br>
+注意：你 不能 对两棵二叉树，以及 target 节点进行更改。只能 返回对克隆树 cloned 中已有的节点的引用。</p>
 <h3>示例</h3>
-<p>输入：root = [1,null,3,2,4,null,5,6]<br>
-输出：[[1],[3,2,4],[5,6]]<br>
-输入：root =[1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]<br>
-输出：[[1],[2,3,4,5],[6,7,8,9,10],[11,12,13],[14]]</p>
-<h3>常规的bfs遍历没什么说的，相当于把传统二叉树遍历的leftright 换成 遍历所有children</h3>
+<p>输入: tree = [7,4,3,null,null,6,19], target = 3<br>
+输出: 3<br>
+解释: 上图画出了树 original 和 cloned。target 节点在树 original 中，用绿色标记。答案是树 cloned 中的黄颜色的节点（其他示例类似）。</p>
+<p>输入: tree = [7], target =  7<br>
+输出: 7</p>
+<p>输入: tree = [8,null,6,null,5,null,4,null,3,null,2,null,1], target = 4<br>
+输出: 4<br>
+#108</p>
 <blockquote>
-<p>代码</p>
+<p>代码（dfs）</p>
 </blockquote>
-<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">/*</span>
-<span class="pl-c">// Definition for a Node.</span>
-<span class="pl-c">class Node {</span>
-<span class="pl-c">public:</span>
-<span class="pl-c">    int val;</span>
-<span class="pl-c">    vector&lt;Node*&gt; children;</span>
-<span class="pl-c"></span>
-<span class="pl-c">    Node() {}</span>
-<span class="pl-c"></span>
-<span class="pl-c">    Node(int _val) {</span>
-<span class="pl-c">        val = _val;</span>
-<span class="pl-c">    }</span>
-<span class="pl-c"></span>
-<span class="pl-c">    Node(int _val, vector&lt;Node*&gt; _children) {</span>
-<span class="pl-c">        val = _val;</span>
-<span class="pl-c">        children = _children;</span>
-<span class="pl-c">    }</span>
-<span class="pl-c">};</span>
-<span class="pl-c">*/</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">/**</span>
+<span class="pl-c"> * Definition for a binary tree node.</span>
+<span class="pl-c"> * struct TreeNode {</span>
+<span class="pl-c"> *     int val;</span>
+<span class="pl-c"> *     TreeNode *left;</span>
+<span class="pl-c"> *     TreeNode *right;</span>
+<span class="pl-c"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}</span>
+<span class="pl-c"> * };</span>
+<span class="pl-c"> */</span>
 
+
+<span class="pl-c">//简单的dfs</span>
 <span class="pl-k">class</span> <span class="pl-v">Solution</span> <span class="pl-kos">{</span>
 <span class="pl-c1">public</span>:
-    <span class="pl-c1">vector</span><span class="pl-c1">&lt;</span><span class="pl-c1">vector</span><span class="pl-c1">&lt;</span><span class="pl-c1">int</span><span class="pl-c1">&gt;&gt;</span> <span class="pl-c1">levelOrder</span><span class="pl-kos">(</span><span class="pl-v">Node</span><span class="pl-c1">*</span> <span class="pl-s1">root</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-        <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;&gt;</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
-        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">root</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
-        <span class="pl-s1">queue</span><span class="pl-c1">&lt;</span><span class="pl-v">Node</span><span class="pl-c1">*</span><span class="pl-c1">&gt;</span> <span class="pl-s1">q</span><span class="pl-kos">;</span>
-        <span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">root</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-
-        <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">empty</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
-        <span class="pl-kos">{</span>
-            <span class="pl-s1">int</span> <span class="pl-s1">n</span> <span class="pl-c1">=</span> <span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">size</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-            <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">level</span><span class="pl-kos">;</span>
-            <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-s1">n</span><span class="pl-c1">--</span><span class="pl-kos">)</span>
-            <span class="pl-kos">{</span>
-                <span class="pl-s1">auto</span> <span class="pl-s1">node</span> <span class="pl-c1">=</span> <span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">front</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-                <span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">pop</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-                <span class="pl-s1">level</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">node</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">val</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-                <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-v">Node</span><span class="pl-c1">*</span> <span class="pl-s1">child</span> : <span class="pl-s1">node</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">children</span><span class="pl-kos">)</span> <span class="pl-s1">q</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">child</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-            <span class="pl-kos">}</span>
-            <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">push_back</span><span class="pl-kos">(</span><span class="pl-s1">level</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-        <span class="pl-kos">}</span>
-        <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+    <span class="pl-c1">TreeNode</span><span class="pl-c1">*</span> <span class="pl-en">getTargetCopy</span><span class="pl-kos">(</span><span class="pl-v">TreeNode</span><span class="pl-c1">*</span> <span class="pl-s1">original</span><span class="pl-kos">,</span> <span class="pl-v">TreeNode</span><span class="pl-c1">*</span> <span class="pl-s1">cloned</span><span class="pl-kos">,</span> <span class="pl-v">TreeNode</span><span class="pl-c1">*</span> <span class="pl-k">target</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">original</span> <span class="pl-c1">==</span> <span class="pl-s1">nullptr</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">nullptr</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">original</span> <span class="pl-c1">==</span> <span class="pl-s1">target</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">cloned</span><span class="pl-kos">;</span>
+        <span class="pl-v">TreeNode</span><span class="pl-c1">*</span> <span class="pl-s1">left</span> <span class="pl-c1">=</span> <span class="pl-en">getTargetCopy</span><span class="pl-kos">(</span><span class="pl-s1">original</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">left</span><span class="pl-kos">,</span><span class="pl-s1">cloned</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">left</span><span class="pl-kos">,</span><span class="pl-s1">target</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span><span class="pl-kos">(</span><span class="pl-s1">left</span> <span class="pl-c1">!=</span> <span class="pl-s1">nullptr</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">left</span><span class="pl-kos">;</span>
+        <span class="pl-k">else</span> <span class="pl-k">return</span> <span class="pl-en">getTargetCopy</span><span class="pl-kos">(</span><span class="pl-s1">original</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">right</span><span class="pl-kos">,</span><span class="pl-s1">cloned</span><span class="pl-c1">-</span><span class="pl-c1">&gt;</span><span class="pl-s1">right</span><span class="pl-kos">,</span><span class="pl-s1">target</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>

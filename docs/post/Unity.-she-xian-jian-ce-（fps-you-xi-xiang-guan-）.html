@@ -5,14 +5,444 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
-    <link rel="icon" href="http://meekdai.com/favicon.ico">
-    <script>
-        if(localStorage.getItem("meek_theme")==null){}
-        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
-        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    <link rel="icon" href="http://meekdai.com/favicon.ico"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-    
-<meta name="description" content="Unity.射线检测（fps游戏相关）">
+<meta name="description" content="### 射线检测
+
+> 重点内容是 ： 物体信息类 RaycastHit 以及RaycastHit[]数组
+
+> 数组有特殊的api :RaycastAll 用法与 Raycast类似
+
+> 特殊api：RaycastNonAlloc 返回的是碰撞器的数量
+
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson23 : MonoBehaviour
+{
+    void Start()
+    {
+        #region 知识点一 什么是射线检测
+        //物理系统中 
+        //目前我们学习的物体相交判断
+        //1.碰撞检测——必备条件 1刚体2碰撞器
+        //2.范围检测——必备条件 碰撞器
+
+        //如果想要做这样的碰撞检测呢？
+        //1.鼠标选择场景上一物体
+        //2.FPS射击游戏（无弹道-不产生实际的子弹对象进行移动）
+        //等等 需要判断一条线和物体的碰撞情况
+
+        //射线检测 就是来解决这些问题的
+        //它可以在指定点发射一个指定方向的射线
+        //判断该射线与哪些碰撞器相交，得到对应对象
+        #endregion
+
+        #region 知识点二 射线对象
+        //1.3D世界中的射线
+        //假设有一条
+        //起点为坐标(1,0,0)
+        //方向为世界坐标Z轴正方向的射线
+        //注意：
+        //理解参数含义
+        //参数一：起点
+        //参数二：方向（一定记住 不是两点决定射线方向，第二个参数 直接就代表方向向量）
+
+        //目前只是申明了一个射线对象 对于我们来说 没有任何的用处
+        Ray r = new Ray(Vector3.right, Vector3.forward);
+
+        //Ray中的参数
+        print(r.origin);//起点,参数1
+        print(r.direction);//方向，参数2
+
+        //2.摄像机发射出的射线
+        // 得到一条从屏幕位置作为起点
+        // 摄像机视口方向为 方向的射线
+        //很重要的API
+        Ray r2 = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+
+        //注意：
+        //单独的射线对于我们来说没有实际的意义
+        //我们需要用它结合物理系统进行射线碰撞判断
+        #endregion
+
+        #region 知识点三 碰撞检测函数
+        //Physics类中提供了很多进行射线检测的静态函数
+        //注意：
+        //射线检测是瞬时的
+        //执行代码时进行一次射线检测
+
+        //1.最原始的射线检测
+        // 准备一条射线
+        Ray r3 = new Ray(Vector3.zero, Vector3.forward);
+        // 进行射线检测 如果碰撞到对象 返回true
+        //参数一：射线
+        //参数二: 检测的最大距离 超出这个距离不检测
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：bool 当碰撞到对象时 返回 true 没有 返回false
+
+        if (Physics.Raycast(r3, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了对象');
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        //就是把 第一个参数射线 变成了 射线的 两个点 一个起点 一个方向
+        if (Physics.Raycast(Vector3.zero, Vector3.forward, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了对象2');
+        }
+
+        //2.获取相交的单个物体信息
+        //物体信息类 RaycastHit
+        RaycastHit hitInfo;
+        //参数一：射线
+        //参数二：RaycastHit是结构体 是值类型 Unity会通过out 关键在 在函数内部处理后 得到碰撞数据后返回到该参数中
+        //参数三：距离
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        if (Physics.Raycast(r3, out hitInfo, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了物体 得到了信息');
+
+            //碰撞器信息
+            print('碰撞到物体的名字' + hitInfo.collider.gameObject.name);
+            //碰撞到的点
+            print(hitInfo.point);
+            //法线信息
+            print(hitInfo.normal);
+
+            //得到碰撞到对象的位置
+            print(hitInfo.transform.position);
+
+            //得到碰撞到对象 离自己的距离
+            print(hitInfo.distance);
+
+            //RaycastHit 该类 对于我们的意义
+            //它不仅可以得到我们碰撞到的对象信息
+            //还可以得到一些 碰撞的点 距离 法线等等的信息
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        if (Physics.Raycast(Vector3.zero, Vector3.forward, out hitInfo, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+
+        }
+
+        //3.获取相交的多个物体
+        //可以得到碰撞到的多个对象
+        //如果没有 就是容量为0的数组
+        //参数一：射线
+        //参数二：距离
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        RaycastHit[] hits = Physics.RaycastAll(r3, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            print('碰到的所有物体 名字分别是' + hits[i].collider.gameObject.name);
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        //之前的参数一射线 通过两个点传入
+        hits = Physics.RaycastAll(Vector3.zero, Vector3.forward, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal);
+
+        //还有一种函数 返回的碰撞的数量 通过out得到数据
+        if (Physics.RaycastNonAlloc(r3, hits, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal) > 0)
+        {
+
+        }
+        #endregion
+        #region 知识点四 使用时注意的问题
+        //注意：
+        //距离、层级两个参数 都是int类型
+        //当我们传入参数时 一定要明确传入的参数代表的是距离还是层级
+
+        //以下 这样写是错误的 因为第二个参数 代表的是距离 不应该是层级 但这个在ide里面是不会报错的
+        if (Physics.Raycast(r3, 1000, 1 << LayerMask.NameToLayer('Monster')))
+        {
+        }
+        #endregion
+    }
+}
+```
+
+### 实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+_子弹特效和弹孔 已经放入到Resources文件夹_
+```js
+//实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),
+                               out info,
+                               1000,
+                               1 << LayerMask.NameToLayer('Monster')))
+            {
+                //碰撞到的点和法线向量
+                //创建打击特效（特效是一个gameobject）
+                GameObject obj = Instantiate(Resources.Load<GameObject>('Effect/HitEff'));
+                obj.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕
+                //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj.transform.rotation = Quaternion.LookRotation(info.normal);
+                Destroy(obj, 0.8f);
+                //创建弹孔
+                GameObject obj1 = Instantiate(Resources.Load<GameObject>('Effect/DDD'));
+                obj1.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕 //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj1.transform.rotation = Quaternion.LookRotation(info.normal);
+            }
+        }
+```
+
+### 点击立方体 常按可以拖动在平面上移动点击右键取消选中
+```js
+if (Input.GetMouseButtonDown(0))
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000,1 << LayerMask.NameToLayer('Player')))
+            {
+                nowSelObj = info.transform;
+            }
+        }
+        //注意此处 GetMouseButton(0) 和上方鼠标选定 GetMouseButtonDown(0)的区别 前者是常按 后者是 按一下
+        if (Input.GetMouseButton(0) && nowSelObj != null)
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000, 1 << LayerMask.NameToLayer('Floor')))
+            {
+                nowSelObj.position = info.point + Vector3.up * offSetY;
+            }
+        }
+
+        
+        if(Input.GetMouseButtonDown(1))
+        {
+            nowSelObj = null;  
+        }
+```。">
+<meta property="og:title" content="Unity.射线检测（fps游戏相关）">
+<meta property="og:description" content="### 射线检测
+
+> 重点内容是 ： 物体信息类 RaycastHit 以及RaycastHit[]数组
+
+> 数组有特殊的api :RaycastAll 用法与 Raycast类似
+
+> 特殊api：RaycastNonAlloc 返回的是碰撞器的数量
+
+```js
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lesson23 : MonoBehaviour
+{
+    void Start()
+    {
+        #region 知识点一 什么是射线检测
+        //物理系统中 
+        //目前我们学习的物体相交判断
+        //1.碰撞检测——必备条件 1刚体2碰撞器
+        //2.范围检测——必备条件 碰撞器
+
+        //如果想要做这样的碰撞检测呢？
+        //1.鼠标选择场景上一物体
+        //2.FPS射击游戏（无弹道-不产生实际的子弹对象进行移动）
+        //等等 需要判断一条线和物体的碰撞情况
+
+        //射线检测 就是来解决这些问题的
+        //它可以在指定点发射一个指定方向的射线
+        //判断该射线与哪些碰撞器相交，得到对应对象
+        #endregion
+
+        #region 知识点二 射线对象
+        //1.3D世界中的射线
+        //假设有一条
+        //起点为坐标(1,0,0)
+        //方向为世界坐标Z轴正方向的射线
+        //注意：
+        //理解参数含义
+        //参数一：起点
+        //参数二：方向（一定记住 不是两点决定射线方向，第二个参数 直接就代表方向向量）
+
+        //目前只是申明了一个射线对象 对于我们来说 没有任何的用处
+        Ray r = new Ray(Vector3.right, Vector3.forward);
+
+        //Ray中的参数
+        print(r.origin);//起点,参数1
+        print(r.direction);//方向，参数2
+
+        //2.摄像机发射出的射线
+        // 得到一条从屏幕位置作为起点
+        // 摄像机视口方向为 方向的射线
+        //很重要的API
+        Ray r2 = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+
+        //注意：
+        //单独的射线对于我们来说没有实际的意义
+        //我们需要用它结合物理系统进行射线碰撞判断
+        #endregion
+
+        #region 知识点三 碰撞检测函数
+        //Physics类中提供了很多进行射线检测的静态函数
+        //注意：
+        //射线检测是瞬时的
+        //执行代码时进行一次射线检测
+
+        //1.最原始的射线检测
+        // 准备一条射线
+        Ray r3 = new Ray(Vector3.zero, Vector3.forward);
+        // 进行射线检测 如果碰撞到对象 返回true
+        //参数一：射线
+        //参数二: 检测的最大距离 超出这个距离不检测
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        //返回值：bool 当碰撞到对象时 返回 true 没有 返回false
+
+        if (Physics.Raycast(r3, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了对象');
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        //就是把 第一个参数射线 变成了 射线的 两个点 一个起点 一个方向
+        if (Physics.Raycast(Vector3.zero, Vector3.forward, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了对象2');
+        }
+
+        //2.获取相交的单个物体信息
+        //物体信息类 RaycastHit
+        RaycastHit hitInfo;
+        //参数一：射线
+        //参数二：RaycastHit是结构体 是值类型 Unity会通过out 关键在 在函数内部处理后 得到碰撞数据后返回到该参数中
+        //参数三：距离
+        //参数四：检测指定层级（不填检测所有层）
+        //参数五：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        if (Physics.Raycast(r3, out hitInfo, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+            print('碰撞到了物体 得到了信息');
+
+            //碰撞器信息
+            print('碰撞到物体的名字' + hitInfo.collider.gameObject.name);
+            //碰撞到的点
+            print(hitInfo.point);
+            //法线信息
+            print(hitInfo.normal);
+
+            //得到碰撞到对象的位置
+            print(hitInfo.transform.position);
+
+            //得到碰撞到对象 离自己的距离
+            print(hitInfo.distance);
+
+            //RaycastHit 该类 对于我们的意义
+            //它不仅可以得到我们碰撞到的对象信息
+            //还可以得到一些 碰撞的点 距离 法线等等的信息
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        if (Physics.Raycast(Vector3.zero, Vector3.forward, out hitInfo, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal))
+        {
+
+        }
+
+        //3.获取相交的多个物体
+        //可以得到碰撞到的多个对象
+        //如果没有 就是容量为0的数组
+        //参数一：射线
+        //参数二：距离
+        //参数三：检测指定层级（不填检测所有层）
+        //参数四：是否忽略触发器 UseGlobal-使用全局设置 Collide-检测触发器 Ignore-忽略触发器 不填使用UseGlobal
+        RaycastHit[] hits = Physics.RaycastAll(r3, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            print('碰到的所有物体 名字分别是' + hits[i].collider.gameObject.name);
+        }
+
+        //还有一种重载 不用传入 射线 直接传入起点 和 方向 也可以用于判断
+        //之前的参数一射线 通过两个点传入
+        hits = Physics.RaycastAll(Vector3.zero, Vector3.forward, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal);
+
+        //还有一种函数 返回的碰撞的数量 通过out得到数据
+        if (Physics.RaycastNonAlloc(r3, hits, 1000, 1 << LayerMask.NameToLayer('Monster'), QueryTriggerInteraction.UseGlobal) > 0)
+        {
+
+        }
+        #endregion
+        #region 知识点四 使用时注意的问题
+        //注意：
+        //距离、层级两个参数 都是int类型
+        //当我们传入参数时 一定要明确传入的参数代表的是距离还是层级
+
+        //以下 这样写是错误的 因为第二个参数 代表的是距离 不应该是层级 但这个在ide里面是不会报错的
+        if (Physics.Raycast(r3, 1000, 1 << LayerMask.NameToLayer('Monster')))
+        {
+        }
+        #endregion
+    }
+}
+```
+
+### 实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+_子弹特效和弹孔 已经放入到Resources文件夹_
+```js
+//实现鼠标点击场景上的一面墙 点击位置创建子弹特效和弹孔
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),
+                               out info,
+                               1000,
+                               1 << LayerMask.NameToLayer('Monster')))
+            {
+                //碰撞到的点和法线向量
+                //创建打击特效（特效是一个gameobject）
+                GameObject obj = Instantiate(Resources.Load<GameObject>('Effect/HitEff'));
+                obj.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕
+                //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj.transform.rotation = Quaternion.LookRotation(info.normal);
+                Destroy(obj, 0.8f);
+                //创建弹孔
+                GameObject obj1 = Instantiate(Resources.Load<GameObject>('Effect/DDD'));
+                obj1.transform.position = info.point + info.normal * 0.3f;
+                //让特效朝向屏幕 //让物体看向法向量  这个法向量是垂直于面的向量 
+                obj1.transform.rotation = Quaternion.LookRotation(info.normal);
+            }
+        }
+```
+
+### 点击立方体 常按可以拖动在平面上移动点击右键取消选中
+```js
+if (Input.GetMouseButtonDown(0))
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000,1 << LayerMask.NameToLayer('Player')))
+            {
+                nowSelObj = info.transform;
+            }
+        }
+        //注意此处 GetMouseButton(0) 和上方鼠标选定 GetMouseButtonDown(0)的区别 前者是常按 后者是 按一下
+        if (Input.GetMouseButton(0) && nowSelObj != null)
+        {
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out info,1000, 1 << LayerMask.NameToLayer('Floor')))
+            {
+                nowSelObj.position = info.point + Vector3.up * offSetY;
+            }
+        }
+
+        
+        if(Input.GetMouseButtonDown(1))
+        {
+            nowSelObj = null;  
+        }
+```。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://natsunokoide.github.io//post/Unity.-she-xian-jian-ce-%EF%BC%88fps-you-xi-xiang-guan-%EF%BC%89.html">
+<meta property="og:image" content="https://i.postimg.cc/dtT4J441/image.png">
 <title>Unity.射线检测（fps游戏相关）</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
@@ -46,26 +476,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="header">
 <h1 class="postTitle">Unity.射线检测（fps游戏相关）</h1>
 <div class="title-right">
-    
-    <a href="https://natsunokoide.github.io/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="https://natsunokoide.github.io/" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd"></path>
         </svg>
-    </button></a>
-
+    </a>
     
-    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/46" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/NatsunoKoide/natsunokoide.github.io/issues/46" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
-    </button></a>
+    </a>
     
 
-    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
         <svg class="octicon" width="16" height="16" >
             <path id="themeSwitch" fill-rule="evenodd"></path>
         </svg>
-    </button>
+    </a>
 
 </div>
 </div>
@@ -302,41 +730,40 @@ if("02/16/2015"!=""){
 </div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
-if(localStorage.getItem("meek_theme")==null){localStorage.setItem("meek_theme","light");changeLight();}
-else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
-else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
 
-function changeDark(){
-    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
-    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
-    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
-    if(utterancesLoad==1){utterancesTheme("dark-blue");}
-}
-function changeLight(){
-    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
-    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
-    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
-    if(utterancesLoad==1){utterancesTheme("github-light");}
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
 }
 function modeSwitch(){
-    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
-    else{changeLight();localStorage.setItem("meek_theme","light");}
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
 }
 function utterancesTheme(theme){
-    const message = {type: 'set-theme',theme: theme};
-    const iframe = document.getElementsByClassName('utterances-frame')[0];
-    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
 }
-
-console.log("\n %c Gmeek last %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
 </script>
 
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
-
 
 function openComments(){
     cm=document.getElementById("comments");
@@ -350,8 +777,11 @@ function openComments(){
     script.setAttribute("src","https://utteranc.es/client.js");
     script.setAttribute("repo","NatsunoKoide/natsunokoide.github.io");
     script.setAttribute("issue-term","title");
+    
     if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
-    else{script.setAttribute("theme","github-light");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
     script.setAttribute("crossorigin","anonymous");
     script.setAttribute("async","");
     cm.appendChild(script);
@@ -370,9 +800,7 @@ function iFrameLoading(){
         }
     }
 }
-
 </script>
-
 
 
 </html>
