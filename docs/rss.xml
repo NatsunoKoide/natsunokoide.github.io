@@ -1,6 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>ADd7</title><link>https://natsunokoide.github.io/</link><description>C++ / C# / Unity 
- You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Tue, 06 Aug 2024 15:19:19 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>面试150-22-LeetCode6.Z字形变换</title><link>https://natsunokoide.github.io//post/mian-shi-150-22-LeetCode6.Z-zi-xing-bian-huan.html</link><description>### 题目&#13;
+ You are welcome to send us your valuable comments.  E-mail:yujiaqifinn@outlook.com</description><copyright>ADd7</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://i.postimg.cc/dtT4J441/image.png</url><title>avatar</title><link>https://natsunokoide.github.io/</link></image><lastBuildDate>Sun, 25 Aug 2024 09:00:56 +0000</lastBuildDate><managingEditor>ADd7</managingEditor><ttl>60</ttl><webMaster>ADd7</webMaster><item><title>XLua_C#调用Lua_类 </title><link>https://natsunokoide.github.io//post/XLua_C%23-diao-yong-Lua_-lei-%20.html</link><description>### 知识点&#13;
+1.  Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名&#13;
+2. 没有命名空间的自定义类        CS.类名&#13;
+3. 实例化对象                              CS.命名空间.类名&#13;
+4. 静态方法和变量                       CS.命名空间.类名.方法&#13;
+5. 成员变量                                  实例化对象.变量名&#13;
+6. 成员方法                                  实例化对象：方法名&#13;
+7. 技巧点                                      &#13;
+（1）用别名定义  ***=CS.命名空间.类名 之后可以直接使用***代替 &#13;
+（2）xlua不支持无参泛型很多时候需要使用含有typeof的重载 &#13;
+（3）一定要通过c#启动lua脚本 才能实现交互&#13;
+&#13;
+### 代码&#13;
+```js&#13;
+print('*********Lua调用c#相关知识点**********')&#13;
+&#13;
+local obj1 = CS.UnityEngine.GameObject()&#13;
+local obj2 = CS.UnityEngine.GameObject('123')&#13;
+&#13;
+GameObject = CS.UnityEngine.GameObject&#13;
+local obj3 = GameObject('测试对象')&#13;
+&#13;
+local t = CS.Test()&#13;
+t:Speak('testspeak')&#13;
+&#13;
+local t2 = CS.Finn.Test2()&#13;
+t2:Speak('test2speak')&#13;
+&#13;
+local obj4 = GameObject('加脚本测试')&#13;
+obj4:AddComponent(typeof(CS.LuaCallCSharp))&#13;
+```。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/XLua_C%23-diao-yong-Lua_-lei-%20.html</guid><pubDate>Sun, 25 Aug 2024 09:00:20 +0000</pubDate></item><item><title>面试150-22-LeetCode6.Z字形变换</title><link>https://natsunokoide.github.io//post/mian-shi-150-22-LeetCode6.Z-zi-xing-bian-huan.html</link><description>### 题目&#13;
 将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、从左到右进行 Z 字形排列。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/mian-shi-150-22-LeetCode6.Z-zi-xing-bian-huan.html</guid><pubDate>Tue, 06 Aug 2024 15:18:39 +0000</pubDate></item><item><title>面试题150-21-LeetCode151.反转字符串中的单词</title><link>https://natsunokoide.github.io//post/mian-shi-ti-150-21-LeetCode151.-fan-zhuan-zi-fu-chuan-zhong-de-dan-ci.html</link><description>### 题目&#13;
 给你一个字符串 s ，请你反转字符串中 单词 的顺序。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/mian-shi-ti-150-21-LeetCode151.-fan-zhuan-zi-fu-chuan-zhong-de-dan-ci.html</guid><pubDate>Sun, 04 Aug 2024 16:19:06 +0000</pubDate></item><item><title>LeetCode572.另一颗树的子树</title><link>https://natsunokoide.github.io//post/LeetCode572.-ling-yi-ke-shu-de-zi-shu.html</link><description>### 题目&#13;
 给你两棵二叉树 root 和 subRoot 。</description><guid isPermaLink="true">https://natsunokoide.github.io//post/LeetCode572.-ling-yi-ke-shu-de-zi-shu.html</guid><pubDate>Sun, 04 Aug 2024 15:16:09 +0000</pubDate></item><item><title>面试150-20-LeeCode14.最长公共前缀</title><link>https://natsunokoide.github.io//post/mian-shi-150-20-LeeCode14.-zui-chang-gong-gong-qian-zhui.html</link><description>### 题目&#13;
