@@ -34,4 +34,4 @@ obj4:AddComponent(typeof(CS.LuaCallCSharp))
 1.枚举的使用与类相似，无法实例化 直接等于号即可
 CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
 
-### 知识点3 —— 
+### 知识点3 —— List/Dic
