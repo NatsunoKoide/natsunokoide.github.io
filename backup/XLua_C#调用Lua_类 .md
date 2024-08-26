@@ -1,4 +1,4 @@
-### 知识点
+### 知识点1 —— 类
 1.  Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名
 2. 没有命名空间的自定义类        CS.类名
 3. 实例化对象                              CS.命名空间.类名
@@ -29,3 +29,9 @@ t2:Speak("test2speak")
 local obj4 = GameObject("加脚本测试")
 obj4:AddComponent(typeof(CS.LuaCallCSharp))
 ```
+
+### 知识点2 —— 枚举
+1.枚举的使用与类相似，无法实例化 直接等于号即可
+CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
+
+### 知识点3 —— 

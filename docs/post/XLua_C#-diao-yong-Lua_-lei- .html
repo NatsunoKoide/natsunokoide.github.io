@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 知识点
+<meta name="description" content="### 知识点1 —— 类
 1.  Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名
 2. 没有命名空间的自定义类        CS.类名
 3. 实例化对象                              CS.命名空间.类名
@@ -40,9 +40,15 @@ t2:Speak('test2speak')
 
 local obj4 = GameObject('加脚本测试')
 obj4:AddComponent(typeof(CS.LuaCallCSharp))
-```。">
+```
+
+### 知识点2 —— 枚举
+1.枚举的使用与类相似，无法实例化 直接等于号即可
+CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
+
+### 知识点3 —— 。">
 <meta property="og:title" content="XLua_C#调用Lua_类 ">
-<meta property="og:description" content="### 知识点
+<meta property="og:description" content="### 知识点1 —— 类
 1.  Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名
 2. 没有命名空间的自定义类        CS.类名
 3. 实例化对象                              CS.命名空间.类名
@@ -72,7 +78,13 @@ t2:Speak('test2speak')
 
 local obj4 = GameObject('加脚本测试')
 obj4:AddComponent(typeof(CS.LuaCallCSharp))
-```。">
+```
+
+### 知识点2 —— 枚举
+1.枚举的使用与类相似，无法实例化 直接等于号即可
+CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
+
+### 知识点3 —— 。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://natsunokoide.github.io//post/XLua_C%23-diao-yong-Lua_-lei-%20.html">
 <meta property="og:image" content="https://i.postimg.cc/dtT4J441/image.png">
@@ -143,7 +155,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>知识点</h3>
+<div class="markdown-body" id="postBody"><h3>知识点1 —— 类</h3>
 <ol>
 <li>Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名</li>
 <li>没有命名空间的自定义类        CS.类名</li>
@@ -172,7 +184,11 @@ t:<span class="pl-v">Speak</span><span class="pl-kos">(</span><span class="pl-s"
 t2:<span class="pl-v">Speak</span><span class="pl-kos">(</span><span class="pl-s">"test2speak"</span><span class="pl-kos">)</span>
 
 <span class="pl-s1">local</span> <span class="pl-s1">obj4</span> <span class="pl-c1">=</span> <span class="pl-v">GameObject</span><span class="pl-kos">(</span><span class="pl-s">"加脚本测试"</span><span class="pl-kos">)</span>
-obj4:<span class="pl-v">AddComponent</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">LuaCallCSharp</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div></div>
+obj4:<span class="pl-v">AddComponent</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">LuaCallCSharp</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div>
+<h3>知识点2 —— 枚举</h3>
+<p>1.枚举的使用与类相似，无法实例化 直接等于号即可<br>
+CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)</p>
+<h3>知识点3 ——</h3></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
