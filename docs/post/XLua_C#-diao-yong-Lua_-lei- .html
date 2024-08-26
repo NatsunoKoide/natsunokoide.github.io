@@ -46,7 +46,84 @@ obj4:AddComponent(typeof(CS.LuaCallCSharp))
 1.枚举的使用与类相似，无法实例化 直接等于号即可
 CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
 
-### 知识点3 —— List/Dic。">
+### 知识点3 —— List/Dic
+```js
+print('*********Lua调用c# list dictionary相关知识点**********')
+
+--直接实例化包含数组的类
+local obj = CS.Lesson3()
+
+--Lua使用c#数组 
+--c#怎么使用 lua就怎么使用 不能使用#获取长度
+--回忆：lua 可以使用 #obj.Array获得长度
+print(obj.array.Length)
+
+--访问元素
+print(obj.array[0])
+
+--遍历 按c#规则从0 开始 且结束需要 -1 lua遍历默认最后带等于
+for i = 0, obj.array.Length - 1 do
+	print(obj.array[i])
+end
+
+--lua种创建一个c#数组lua种表示数组和list可以使用表
+--创建c#种的数字 使用array类中的静态方法
+local array2 = CS.System.Array.CreateInstance(typeof(CS.System.Int32),10)
+print(array2.Length)
+print(array2[0])
+
+print('*********Lua调用c# list相关知识点**********')
+obj.list:Add(1)
+obj.list:Add(2)
+obj.list:Add(3)
+--长度
+print(obj.list.Count)
+--遍历
+for i=0,obj.list.Count - 1 do
+	print(obj.list[i])
+end
+print(obj.list)
+
+--lua中创建一个list对象
+--老版本
+local list2 = CS.System.Collections.Generic['List`1[System.String]']()
+print(list2)
+--新版本 > v2.1.12
+--申明一个泛型为string的list类结构
+local list_String = CS.System.Collections.Generic.List(CS.System.String)
+--实例化出来
+local list3 = list_String()
+list3:Add('2222')
+print(list3[0])
+
+print('*********Lua调用c# dic相关知识点**********')
+--使用
+obj.dic:Add(1,'123')
+print(obj.dic[1])
+
+--遍历
+for k,v in pairs(obj.dic) do
+	print(k,v)
+end
+
+--在lua创建一个dic 
+--相当于得到一个dictionary 的一个类别名，需要再实例化
+local Dic_String_Vector3 = CS.System.Collections.Generic.Dictionary(CS.System.String,CS.UnityEngine.Vector3)
+local dic2 = Dic_String_Vector3()
+dic2:Add('123',CS.UnityEngine.Vector3.right)
+for i,v in pairs(dic2) do
+	print(i,v)
+end
+--尝试获取值 返回 bool 和 值
+print(dic2:TryGetValue('123'))
+--在lua创建的字典 通过括号只能得到nil
+print(dic2['123'])
+--如果通过键来获得值 需要采用固定方法如下
+print(dic2:get_Item('123'))
+--设置键值对也可以采用set如下
+dic2:set_Item('123',nil)
+print(dic2:get_Item('123'))
+```。">
 <meta property="og:title" content="XLua_C#调用Lua_类 ">
 <meta property="og:description" content="### 知识点1 —— 类
 1.  Lua调用C#类                          CS.命名空间.类名        CS.UnityEngine.类名
@@ -84,7 +161,84 @@ obj4:AddComponent(typeof(CS.LuaCallCSharp))
 1.枚举的使用与类相似，无法实例化 直接等于号即可
 CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
 
-### 知识点3 —— List/Dic。">
+### 知识点3 —— List/Dic
+```js
+print('*********Lua调用c# list dictionary相关知识点**********')
+
+--直接实例化包含数组的类
+local obj = CS.Lesson3()
+
+--Lua使用c#数组 
+--c#怎么使用 lua就怎么使用 不能使用#获取长度
+--回忆：lua 可以使用 #obj.Array获得长度
+print(obj.array.Length)
+
+--访问元素
+print(obj.array[0])
+
+--遍历 按c#规则从0 开始 且结束需要 -1 lua遍历默认最后带等于
+for i = 0, obj.array.Length - 1 do
+	print(obj.array[i])
+end
+
+--lua种创建一个c#数组lua种表示数组和list可以使用表
+--创建c#种的数字 使用array类中的静态方法
+local array2 = CS.System.Array.CreateInstance(typeof(CS.System.Int32),10)
+print(array2.Length)
+print(array2[0])
+
+print('*********Lua调用c# list相关知识点**********')
+obj.list:Add(1)
+obj.list:Add(2)
+obj.list:Add(3)
+--长度
+print(obj.list.Count)
+--遍历
+for i=0,obj.list.Count - 1 do
+	print(obj.list[i])
+end
+print(obj.list)
+
+--lua中创建一个list对象
+--老版本
+local list2 = CS.System.Collections.Generic['List`1[System.String]']()
+print(list2)
+--新版本 > v2.1.12
+--申明一个泛型为string的list类结构
+local list_String = CS.System.Collections.Generic.List(CS.System.String)
+--实例化出来
+local list3 = list_String()
+list3:Add('2222')
+print(list3[0])
+
+print('*********Lua调用c# dic相关知识点**********')
+--使用
+obj.dic:Add(1,'123')
+print(obj.dic[1])
+
+--遍历
+for k,v in pairs(obj.dic) do
+	print(k,v)
+end
+
+--在lua创建一个dic 
+--相当于得到一个dictionary 的一个类别名，需要再实例化
+local Dic_String_Vector3 = CS.System.Collections.Generic.Dictionary(CS.System.String,CS.UnityEngine.Vector3)
+local dic2 = Dic_String_Vector3()
+dic2:Add('123',CS.UnityEngine.Vector3.right)
+for i,v in pairs(dic2) do
+	print(i,v)
+end
+--尝试获取值 返回 bool 和 值
+print(dic2:TryGetValue('123'))
+--在lua创建的字典 通过括号只能得到nil
+print(dic2['123'])
+--如果通过键来获得值 需要采用固定方法如下
+print(dic2:get_Item('123'))
+--设置键值对也可以采用set如下
+dic2:set_Item('123',nil)
+print(dic2:get_Item('123'))
+```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://natsunokoide.github.io//post/XLua_C%23-diao-yong-Lua_-lei-%20.html">
 <meta property="og:image" content="https://i.postimg.cc/dtT4J441/image.png">
@@ -188,7 +342,82 @@ obj4:<span class="pl-v">AddComponent</span><span class="pl-kos">(</span><span cl
 <h3>知识点2 —— 枚举</h3>
 <p>1.枚举的使用与类相似，无法实例化 直接等于号即可<br>
 CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)</p>
-<h3>知识点3 —— List/Dic</h3></div>
+<h3>知识点3 —— List/Dic</h3>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"*********Lua调用c# list dictionary相关知识点**********"</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">直接实例化包含数组的类</span>
+<span class="pl-s1">local</span> <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-en">Lesson3</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-v">Lua使用c</span>#<span class="pl-s1">数组</span> 
+<span class="pl-c1">--</span><span class="pl-s1">c</span>#<span class="pl-s1">怎么使用</span> <span class="pl-s1">lua就怎么使用</span> <span class="pl-s1">不能使用</span>#<span class="pl-s1">获取长度</span>
+<span class="pl-c1">--</span><span class="pl-s1">回忆：lua</span> <span class="pl-s1">可以使用</span> #<span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">Array获得长度</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">array</span><span class="pl-kos">.</span><span class="pl-c1">Length</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">访问元素</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">array</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">遍历</span> <span class="pl-s1">按c</span>#<span class="pl-s1">规则从0</span> <span class="pl-s1">开始</span> <span class="pl-s1">且结束需要</span> <span class="pl-c1">-</span><span class="pl-c1">1</span> <span class="pl-s1">lua遍历默认最后带等于</span>
+<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">array</span><span class="pl-kos">.</span><span class="pl-c1">Length</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span> <span class="pl-s1">do</span>
+	<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">array</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+<span class="pl-s1">end</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">lua种创建一个c</span>#<span class="pl-s1">数组lua种表示数组和list可以使用表</span>
+<span class="pl-c1">--</span><span class="pl-s1">创建c</span>#<span class="pl-s1">种的数字</span> <span class="pl-s1">使用array类中的静态方法</span>
+<span class="pl-s1">local</span> <span class="pl-s1">array2</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Array</span><span class="pl-kos">.</span><span class="pl-en">CreateInstance</span><span class="pl-kos">(</span><span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Int32</span><span class="pl-kos">)</span><span class="pl-kos">,</span><span class="pl-c1">10</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">array2</span><span class="pl-kos">.</span><span class="pl-c1">Length</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">array2</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"*********Lua调用c# list相关知识点**********"</span><span class="pl-kos">)</span>
+<span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">list</span>:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">)</span>
+<span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">list</span>:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-c1">2</span><span class="pl-kos">)</span>
+<span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">list</span>:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-c1">3</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">长度</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">list</span><span class="pl-kos">.</span><span class="pl-c1">Count</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">遍历</span>
+<span class="pl-k">for</span> <span class="pl-s1">i</span><span class="pl-c1">=</span><span class="pl-c1">0</span><span class="pl-kos">,</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">list</span><span class="pl-kos">.</span><span class="pl-c1">Count</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span> <span class="pl-s1">do</span>
+	<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">list</span><span class="pl-kos">[</span><span class="pl-s1">i</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+<span class="pl-s1">end</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">list</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">lua中创建一个list对象</span>
+<span class="pl-c1">--</span><span class="pl-s1">老版本</span>
+<span class="pl-s1">local</span> <span class="pl-s1">list2</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">[</span><span class="pl-s">"List`1[System.String]"</span><span class="pl-kos">]</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">list2</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">新版本</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">v2</span><span class="pl-c1">.1</span><span class="pl-c1">.12</span>
+<span class="pl-c1">--</span><span class="pl-s1">申明一个泛型为string的list类结构</span>
+<span class="pl-s1">local</span><span class="pl-kos"></span> <span class="pl-s1">list_String</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">.</span><span class="pl-en">List</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">String</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">实例化出来</span>
+<span class="pl-s1">local</span> <span class="pl-s1">list3</span> <span class="pl-c1">=</span> <span class="pl-en">list_String</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+list3:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-s">"2222"</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">list3</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"*********Lua调用c# dic相关知识点**********"</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">使用</span>
+<span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-en">dic</span>:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">,</span><span class="pl-s">"123"</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">dic</span><span class="pl-kos">[</span><span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">遍历</span>
+<span class="pl-k">for</span> <span class="pl-s1">k</span><span class="pl-kos">,</span><span class="pl-s1">v</span> <span class="pl-k">in</span> <span class="pl-en">pairs</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">.</span><span class="pl-c1">dic</span><span class="pl-kos">)</span> <span class="pl-s1">do</span>
+	<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">k</span><span class="pl-kos">,</span><span class="pl-s1">v</span><span class="pl-kos">)</span>
+<span class="pl-s1">end</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">在lua创建一个dic</span> 
+<span class="pl-c1">--</span><span class="pl-s1">相当于得到一个dictionary</span><span class="pl-kos"></span> <span class="pl-s1">的一个类别名，需要再实例化</span>
+<span class="pl-s1">local</span><span class="pl-kos"></span> <span class="pl-v">Dic_String_Vector3</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Collections</span><span class="pl-kos">.</span><span class="pl-c1">Generic</span><span class="pl-kos">.</span><span class="pl-en">Dictionary</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">String</span><span class="pl-kos">,</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">UnityEngine</span><span class="pl-kos">.</span><span class="pl-c1">Vector3</span><span class="pl-kos">)</span>
+<span class="pl-s1">local</span> <span class="pl-s1">dic2</span> <span class="pl-c1">=</span> <span class="pl-v">Dic_String_Vector3</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+dic2:<span class="pl-v">Add</span><span class="pl-kos">(</span><span class="pl-s">"123"</span><span class="pl-kos">,</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">UnityEngine</span><span class="pl-kos">.</span><span class="pl-c1">Vector3</span><span class="pl-kos">.</span><span class="pl-c1">right</span><span class="pl-kos">)</span>
+<span class="pl-k">for</span> <span class="pl-s1">i</span><span class="pl-kos">,</span><span class="pl-s1">v</span> <span class="pl-k">in</span> <span class="pl-en">pairs</span><span class="pl-kos">(</span><span class="pl-s1">dic2</span><span class="pl-kos">)</span> <span class="pl-s1">do</span>
+	<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">i</span><span class="pl-kos">,</span><span class="pl-s1">v</span><span class="pl-kos">)</span>
+<span class="pl-s1">end</span>
+<span class="pl-c1">--</span><span class="pl-s1">尝试获取值</span> <span class="pl-s1">返回</span> <span class="pl-s1">bool</span> <span class="pl-s1">和</span> <span class="pl-s1">值</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">dic2</span>:<span class="pl-v">TryGetValue</span><span class="pl-kos">(</span><span class="pl-s">"123"</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">在lua创建的字典</span><span class="pl-kos"></span> <span class="pl-s1">通过括号只能得到nil</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">dic2</span><span class="pl-kos">[</span><span class="pl-s">"123"</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">如果通过键来获得值</span><span class="pl-kos"></span> <span class="pl-s1">需要采用固定方法如下</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">dic2</span>:<span class="pl-en">get_Item</span><span class="pl-kos">(</span><span class="pl-s">"123"</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">设置键值对也可以采用set如下</span>
+dic2:<span class="pl-en">set_Item</span><span class="pl-kos">(</span><span class="pl-s">"123"</span><span class="pl-kos">,</span><span class="pl-s1">nil</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">dic2</span>:<span class="pl-en">get_Item</span><span class="pl-kos">(</span><span class="pl-s">"123"</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

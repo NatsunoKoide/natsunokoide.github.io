@@ -35,3 +35,80 @@ obj4:AddComponent(typeof(CS.LuaCallCSharp))
 CS.命名空间.枚举名.枚举成员        /        枚举.__CastFrom(数字或者字符串)
 
 ### 知识点3 —— List/Dic
+```js
+print("*********Lua调用c# list dictionary相关知识点**********")
+
+--直接实例化包含数组的类
+local obj = CS.Lesson3()
+
+--Lua使用c#数组 
+--c#怎么使用 lua就怎么使用 不能使用#获取长度
+--回忆：lua 可以使用 #obj.Array获得长度
+print(obj.array.Length)
+
+--访问元素
+print(obj.array[0])
+
+--遍历 按c#规则从0 开始 且结束需要 -1 lua遍历默认最后带等于
+for i = 0, obj.array.Length - 1 do
+	print(obj.array[i])
+end
+
+--lua种创建一个c#数组lua种表示数组和list可以使用表
+--创建c#种的数字 使用array类中的静态方法
+local array2 = CS.System.Array.CreateInstance(typeof(CS.System.Int32),10)
+print(array2.Length)
+print(array2[0])
+
+print("*********Lua调用c# list相关知识点**********")
+obj.list:Add(1)
+obj.list:Add(2)
+obj.list:Add(3)
+--长度
+print(obj.list.Count)
+--遍历
+for i=0,obj.list.Count - 1 do
+	print(obj.list[i])
+end
+print(obj.list)
+
+--lua中创建一个list对象
+--老版本
+local list2 = CS.System.Collections.Generic["List`1[System.String]"]()
+print(list2)
+--新版本 > v2.1.12
+--申明一个泛型为string的list类结构
+local list_String = CS.System.Collections.Generic.List(CS.System.String)
+--实例化出来
+local list3 = list_String()
+list3:Add("2222")
+print(list3[0])
+
+print("*********Lua调用c# dic相关知识点**********")
+--使用
+obj.dic:Add(1,"123")
+print(obj.dic[1])
+
+--遍历
+for k,v in pairs(obj.dic) do
+	print(k,v)
+end
+
+--在lua创建一个dic 
+--相当于得到一个dictionary 的一个类别名，需要再实例化
+local Dic_String_Vector3 = CS.System.Collections.Generic.Dictionary(CS.System.String,CS.UnityEngine.Vector3)
+local dic2 = Dic_String_Vector3()
+dic2:Add("123",CS.UnityEngine.Vector3.right)
+for i,v in pairs(dic2) do
+	print(i,v)
+end
+--尝试获取值 返回 bool 和 值
+print(dic2:TryGetValue("123"))
+--在lua创建的字典 通过括号只能得到nil
+print(dic2["123"])
+--如果通过键来获得值 需要采用固定方法如下
+print(dic2:get_Item("123"))
+--设置键值对也可以采用set如下
+dic2:set_Item("123",nil)
+print(dic2:get_Item("123"))
+```
