@@ -157,3 +157,65 @@ obj:Speak("123")
 --要调用 c# 的某个类的拓展方法  那么一定要 在拓展方法的
 obj:Move()
 ```
+
+### 知识点5 —— ref和out的调用
+1.C#中的类+方法声明
+```js
+public class Lesson5
+{
+    public int RefFun(int a,ref int b,ref int c,int d)
+    {
+        b = a + d;
+        c = a - d;
+        return 100;
+    }
+
+    public int OutFun(int a, out int b, out int c, int d)
+    {
+        b = a;
+        c = d;
+        return 200;
+    }
+
+    public int RefOutFun(int a, out int b, ref int c)
+    {
+        b = a * 10;
+        c = a * 20;
+        return 200;
+    }
+}
+```
+2.lua脚本
+```js
+print("*********Lua调用c# refout相关知识点**********")
+
+Lesson5 = CS.Lesson5
+
+local obj = Lesson5()
+
+--ref参数 会以多返回值的形式返回给lua
+--如果函数存在返回值 那么第一个值 就是该返回值
+--之后的返回值就说ref的结果 从左到右一一对应
+--ref参数 需要传入一个默认值 占位置
+--a 相当于 默认返回值 b 相当于第一个 ref  c 相当于第二个ref
+
+local a,b,c = obj:RefFun(1,0,0,1)
+print(a);
+print(b);
+print(c);
+
+--ref参数 会以多返回值的形式返回给lua
+--如果函数存在返回值 那么第一个值 就是该返回值 
+--之后的返回值就说ref的结果 从左到右一一对应
+--ref参数 不需要传入一个默认值 占位置 （（（（（（（（（（这是个ref的区别））））））））））
+local a,b,c = obj:OutFun(20,30)
+print(a);
+print(b);
+print(c);
+
+--第三种情况混合ref和out
+local a,b,c = obj:RefOutFun(20,1)
+print(a);
+print(b);
+print(c);
+```
