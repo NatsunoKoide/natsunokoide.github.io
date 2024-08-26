@@ -230,6 +230,63 @@ local a,b,c = obj:RefOutFun(20,1)
 print(a);
 print(b);
 print(c);
+```
+
+### 知识点6 —— 重载函数
+1.c#中的类
+```js
+public class Lesson6
+{
+    public int Calc()
+    {
+        return 100;
+    }
+    public int Calc(int a,int b)
+    {
+        return a + b;
+    }
+    public int Calc(int a)
+    {
+        return a;
+    }
+    public float Calc(float a)
+    {
+        return a;
+    }
+}
+```
+
+2.lua脚本
+```js
+print('*****************lua调用c# 重载函数知识点*******************')
+
+local obj = CS.Lesson6()
+--LUA自己不支持重载函数 但是lua支持调用c#的重载
+
+print(obj:Calc())
+print(obj:Calc(15,1))
+--lua虽然支持重载c#
+--但是lua的数值类型只有number
+--对c#多精度的重载支持不是很好
+--使用时会出现意料之外的返回值
+--所以尽可能避免使用不同精度类型的重载
+print(obj:Calc(10))
+--此处无法正常输出float类型
+print(obj:Calc(10.2))
+
+--针对重载含糊问题的解决办法（只做了解不会实际开发不会采用——效率很低）
+--利用typeof反射关键类
+local m1 = typeof(CS.Lesson6):GetMethod('Calc',{typeof(CS.System.Int32)})
+local m2 = typeof(CS.Lesson6):GetMethod('Calc',{typeof(CS.System.Single)})
+
+--通过xlua提供的方法 把函数转为lua函数使用
+--一般转一次 然后重复使用
+local f1 = xlua.tofunction(m1)
+local f2 = xlua.tofunction(m2)
+
+--调用 转换之后的函数方法 第一个参数为类对象 第二个参数是输入参数
+print(f1(obj,10))
+print(f2(obj,10.2))
 ```。">
 <meta property="og:title" content="XLua_C#调用Lua_类 ">
 <meta property="og:description" content="### 知识点1 —— 类
@@ -452,6 +509,63 @@ local a,b,c = obj:RefOutFun(20,1)
 print(a);
 print(b);
 print(c);
+```
+
+### 知识点6 —— 重载函数
+1.c#中的类
+```js
+public class Lesson6
+{
+    public int Calc()
+    {
+        return 100;
+    }
+    public int Calc(int a,int b)
+    {
+        return a + b;
+    }
+    public int Calc(int a)
+    {
+        return a;
+    }
+    public float Calc(float a)
+    {
+        return a;
+    }
+}
+```
+
+2.lua脚本
+```js
+print('*****************lua调用c# 重载函数知识点*******************')
+
+local obj = CS.Lesson6()
+--LUA自己不支持重载函数 但是lua支持调用c#的重载
+
+print(obj:Calc())
+print(obj:Calc(15,1))
+--lua虽然支持重载c#
+--但是lua的数值类型只有number
+--对c#多精度的重载支持不是很好
+--使用时会出现意料之外的返回值
+--所以尽可能避免使用不同精度类型的重载
+print(obj:Calc(10))
+--此处无法正常输出float类型
+print(obj:Calc(10.2))
+
+--针对重载含糊问题的解决办法（只做了解不会实际开发不会采用——效率很低）
+--利用typeof反射关键类
+local m1 = typeof(CS.Lesson6):GetMethod('Calc',{typeof(CS.System.Int32)})
+local m2 = typeof(CS.Lesson6):GetMethod('Calc',{typeof(CS.System.Single)})
+
+--通过xlua提供的方法 把函数转为lua函数使用
+--一般转一次 然后重复使用
+local f1 = xlua.tofunction(m1)
+local f2 = xlua.tofunction(m2)
+
+--调用 转换之后的函数方法 第一个参数为类对象 第二个参数是输入参数
+print(f1(obj,10))
+print(f2(obj,10.2))
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://natsunokoide.github.io//post/XLua_C%23-diao-yong-Lua_-lei-%20.html">
@@ -733,7 +847,58 @@ obj:<span class="pl-v">Move</span><span class="pl-kos">(</span><span class="pl-k
 <span class="pl-s1">local</span> <span class="pl-s1">a</span><span class="pl-kos">,</span><span class="pl-s1">b</span><span class="pl-kos">,</span><span class="pl-s1">c</span> <span class="pl-c1">=</span> <span class="pl-s1">obj</span>:<span class="pl-v">RefOutFun</span><span class="pl-kos">(</span><span class="pl-c1">20</span><span class="pl-kos">,</span><span class="pl-c1">1</span><span class="pl-kos">)</span>
 <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">a</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">b</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">c</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">c</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<h3>知识点6 —— 重载函数</h3>
+<p>1.c#中的类</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">public</span> <span class="pl-k">class</span> <span class="pl-v">Lesson6</span>
+<span class="pl-kos">{</span>
+    <span class="pl-en">public</span> <span class="pl-s1">int</span> <span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-c1">100</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-en">public</span> <span class="pl-s1">int</span> <span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">a</span><span class="pl-kos">,</span><span class="pl-s1">int</span> <span class="pl-s1">b</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s1">b</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-en">public</span> <span class="pl-s1">int</span> <span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-s1">int</span> <span class="pl-s1">a</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-s1">a</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-en">public</span> <span class="pl-s1">float</span> <span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-s1">float</span> <span class="pl-s1">a</span><span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-s1">a</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<p>2.lua脚本</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s">"*****************lua调用c# 重载函数知识点*******************"</span><span class="pl-kos">)</span>
+
+<span class="pl-s1">local</span> <span class="pl-s1">obj</span> <span class="pl-c1">=</span> <span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-en">Lesson6</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-v">LUA自己不支持重载函数</span> <span class="pl-s1">但是lua支持调用c</span>#<span class="pl-s1">的重载</span>
+
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span>:<span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span>:<span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-c1">15</span><span class="pl-kos">,</span><span class="pl-c1">1</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">lua虽然支持重载c</span>#
+<span class="pl-c1">--</span><span class="pl-s1">但是lua的数值类型只有number</span>
+<span class="pl-c1">--</span><span class="pl-s1">对c</span>#<span class="pl-s1">多精度的重载支持不是很好</span>
+<span class="pl-c1">--</span><span class="pl-s1">使用时会出现意料之外的返回值</span>
+<span class="pl-c1">--</span><span class="pl-s1">所以尽可能避免使用不同精度类型的重载</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span>:<span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-c1">--</span><span class="pl-s1">此处无法正常输出float类型</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-s1">obj</span>:<span class="pl-v">Calc</span><span class="pl-kos">(</span><span class="pl-c1">10.2</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">针对重载含糊问题的解决办法（只做了解不会实际开发不会采用——效率很低）</span>
+<span class="pl-c1">--</span><span class="pl-s1">利用typeof反射关键类</span>
+local <span class="pl-s1">m1</span> <span class="pl-c1">=</span> <span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">Lesson6</span><span class="pl-kos">)</span>:<span class="pl-v">GetMethod</span><span class="pl-kos">(</span><span class="pl-s">"Calc"</span><span class="pl-kos">,</span><span class="pl-kos">{</span><span class="pl-c1">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Int32</span><span class="pl-kos">)</span><span class="pl-kos">}</span><span class="pl-kos">)</span>
+local <span class="pl-s1">m2</span> <span class="pl-c1">=</span> <span class="pl-k">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">Lesson6</span><span class="pl-kos">)</span>:<span class="pl-v">GetMethod</span><span class="pl-kos">(</span><span class="pl-s">"Calc"</span><span class="pl-kos">,</span><span class="pl-kos">{</span><span class="pl-c1">typeof</span><span class="pl-kos">(</span><span class="pl-c1">CS</span><span class="pl-kos">.</span><span class="pl-c1">System</span><span class="pl-kos">.</span><span class="pl-c1">Single</span><span class="pl-kos">)</span><span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">通过xlua提供的方法</span><span class="pl-kos"></span> <span class="pl-s1">把函数转为lua函数使用</span>
+<span class="pl-c1">--</span><span class="pl-s1">一般转一次</span><span class="pl-kos"></span> <span class="pl-s1">然后重复使用</span>
+<span class="pl-s1">local</span> <span class="pl-s1">f1</span> <span class="pl-c1">=</span> <span class="pl-s1">xlua</span><span class="pl-kos">.</span><span class="pl-en">tofunction</span><span class="pl-kos">(</span><span class="pl-s1">m1</span><span class="pl-kos">)</span>
+<span class="pl-s1">local</span> <span class="pl-s1">f2</span> <span class="pl-c1">=</span> <span class="pl-s1">xlua</span><span class="pl-kos">.</span><span class="pl-en">tofunction</span><span class="pl-kos">(</span><span class="pl-s1">m2</span><span class="pl-kos">)</span>
+
+<span class="pl-c1">--</span><span class="pl-s1">调用</span> <span class="pl-s1">转换之后的函数方法</span> <span class="pl-s1">第一个参数为类对象</span> <span class="pl-s1">第二个参数是输入参数</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-en">f1</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">,</span><span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-en">print</span><span class="pl-kos">(</span><span class="pl-en">f2</span><span class="pl-kos">(</span><span class="pl-s1">obj</span><span class="pl-kos">,</span><span class="pl-c1">10.2</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

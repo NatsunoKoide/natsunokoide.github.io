@@ -219,3 +219,60 @@ print(a);
 print(b);
 print(c);
 ```
+
+### 知识点6 —— 重载函数
+1.c#中的类
+```js
+public class Lesson6
+{
+    public int Calc()
+    {
+        return 100;
+    }
+    public int Calc(int a,int b)
+    {
+        return a + b;
+    }
+    public int Calc(int a)
+    {
+        return a;
+    }
+    public float Calc(float a)
+    {
+        return a;
+    }
+}
+```
+
+2.lua脚本
+```js
+print("*****************lua调用c# 重载函数知识点*******************")
+
+local obj = CS.Lesson6()
+--LUA自己不支持重载函数 但是lua支持调用c#的重载
+
+print(obj:Calc())
+print(obj:Calc(15,1))
+--lua虽然支持重载c#
+--但是lua的数值类型只有number
+--对c#多精度的重载支持不是很好
+--使用时会出现意料之外的返回值
+--所以尽可能避免使用不同精度类型的重载
+print(obj:Calc(10))
+--此处无法正常输出float类型
+print(obj:Calc(10.2))
+
+--针对重载含糊问题的解决办法（只做了解不会实际开发不会采用——效率很低）
+--利用typeof反射关键类
+local m1 = typeof(CS.Lesson6):GetMethod("Calc",{typeof(CS.System.Int32)})
+local m2 = typeof(CS.Lesson6):GetMethod("Calc",{typeof(CS.System.Single)})
+
+--通过xlua提供的方法 把函数转为lua函数使用
+--一般转一次 然后重复使用
+local f1 = xlua.tofunction(m1)
+local f2 = xlua.tofunction(m2)
+
+--调用 转换之后的函数方法 第一个参数为类对象 第二个参数是输入参数
+print(f1(obj,10))
+print(f2(obj,10.2))
+```
