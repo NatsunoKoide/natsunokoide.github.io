@@ -112,3 +112,48 @@ print(dic2:get_Item("123"))
 dic2:set_Item("123",nil)
 print(dic2:get_Item("123"))
 ```
+### 知识点4 —— 拓展方法的使用
+1. c#中代码
+```js
+//若要在lua中使用工具类中的拓展方法 要加特性
+//建议lua使用了的类 都加上特性 可以增加性能
+[LuaCallCSharp]
+public static class Tools
+{
+    //lesson4的拓展方法的写法
+    public static void Move(this Lesson4 obj)
+    {
+        Debug.Log(obj.name + "移动");
+    }
+}
+public class Lesson4
+{
+    public string name = "123";
+    public void Speak(string str)
+    {
+        Debug.Log(str);
+    }
+
+    public static void Eat()
+    {
+        Debug.Log("吃东西");
+    }
+}
+```
+2. lua脚本
+```js
+print("*********Lua调用c# 拓展方法相关知识点**********")
+
+Lesson4 = CS.Lesson4
+--使用静态方法
+--CS.命名空间.类名.静态方法（）
+Lesson4.Eat()
+
+--成员方法  实例化出来用 用 ： 
+local obj = Lesson4()
+obj:Speak("123")
+
+--使用拓展方法 和使用成员方法一致
+--要调用 c# 的某个类的拓展方法  那么一定要 在拓展方法的
+obj:Move()
+```
