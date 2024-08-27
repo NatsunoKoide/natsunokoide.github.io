@@ -276,3 +276,103 @@ local f2 = xlua.tofunction(m2)
 print(f1(obj,10))
 print(f2(obj,10.2))
 ```
+
+### 知识点7 —— 委托和事件 
+1.c#内容
+```js
+public class Lesson7
+{
+    //申明委托
+    public UnityAction del;
+
+    //申明事件(事件只能在类内部调用)
+    public event UnityAction eventAction;
+
+    public void DoEvent()
+    {
+        if(eventAction != null)
+        {
+            eventAction();
+        }
+    }
+
+    public void ClearEvent()
+    {
+        eventAction = null;
+    }
+}
+#endregion
+```
+2.lua函数
+```js
+print("*****************lua调用c#委托事件知识点*******************")
+
+local obj = CS.Lesson7()
+
+print("——————————————————————————委托相关————————————————————")
+--委托是用来装函数的 使用c#的委托 就是用来装lua函数
+local fun = function()
+	print("lua函数Fun")
+end
+
+--lua 没有复合运算符 不能+=
+--如果第一次往委托中加函数 因为是nil 不能直接+
+
+--委托第一次直接等于就行(很关键)
+
+print("——————————————————————————开始加函数————————————————————")
+obj.del = fun
+obj.del = obj.del + fun
+--最好不要这样写 有点匿名函数的感觉 不好去除
+obj.del = obj.del + function()
+	print("临时定义的函数")
+end
+--委托执行
+obj.del()
+print("——————————————————————————开始减函数————————————————————")
+obj.del = obj.del - fun
+obj.del = obj.del - fun
+--委托执行
+obj.del()
+--委托清空函数
+obj.del = nil
+--清空后先等于
+obj.del = fun
+--委托调用
+obj.del()
+
+print("——————————————————————————事件相关————————————————————")
+local fun2 = function()
+	print("事件加的函数")
+end
+print("——————————————————————————加事件函数————————————————————")
+--事件加减函数 和 委托非常不一样
+--lua使用c#事件 加函数 
+--有点类似于使用成员方法 冒号事件名（"+",函数变量）
+--最好不要用类似匿名函数的写法 
+obj:eventAction("+",fun2)
+obj:eventAction("+",fun2)
+--事件执行
+obj:DoEvent()
+print("——————————————————————————减事件函数————————————————————")
+obj:eventAction("-",fun2)
+obj:DoEvent()
+print("——————————————————————————事件清除————————————————————")
+--注意 事件不能像委托一样 置空清空 
+--可以在c#中对事件写一个清空函数 在lua中调用
+obj:ClearEvent()
+obj:DoEvent()
+```
+3.区分函数和事件
+区别：
+事件的执行可能涉及多个线程，而函数是单线程的
+每个事件触发以后，系统就开一个线程执行这个事件。所以可以使用Delay
+而由于函数是单线程的，调用函数以后该线程就在等待函数的执行直到其返回，函数内部无法停等，即函数中不能使用Timeline, Delay。
+事件没有返回值
+事件的意义是游戏中发生的事情。如玩家按下前进键。
+适用：
+需要停等如Delay的时候使用Event
+需要返回值的时候使用Function
+由游戏中的“事件”触发的逻辑应该使用Event来写
+由于事件的多线程特性，其执行顺序是不定的。所以如果想封装一个不需要返回值，不需要停等，不由游戏中“事件”触发 的功能，应尽可能使用Function，顺序比较可控
+原文链接：https://blog.csdn.net/weixin_44559752/article/details/123027442
